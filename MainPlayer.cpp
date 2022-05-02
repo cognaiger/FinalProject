@@ -9,6 +9,14 @@ MainPlayer::MainPlayer() {
     widthFrame = 0;
     heightFrame = 0;
     status = -1;
+    inputType.right = 0;
+    inputType.left = 0;
+    inputType.down = 0;
+    inputType.jump = 0;
+    inputType.up = 0;
+    onGround = false;
+    mapX = 0;
+    mapY = 0;
 }
 
 MainPlayer::~MainPlayer() {
@@ -25,12 +33,15 @@ bool MainPlayer::LoadImg(std::string path, SDL_Renderer* screen) {
 }
 
 void MainPlayer::SetClips() {
-    for (int i = 0; i < FRAME_NUM; i++) {
-        frameCLip[i].x = i*widthFrame;
-        frameCLip[i].y = 0;
-        frameCLip[i].w = widthFrame;
-        frameCLip[i].h = heightFrame;
+    if (widthFrame && heightFrame) {
+        for (int i = 0; i < FRAME_NUM; i++) {
+            frameCLip[i].x = i*widthFrame;
+            frameCLip[i].y = 0;
+            frameCLip[i].w = widthFrame;
+            frameCLip[i].h = heightFrame;
+        }
     }
+    
 }
 
 void MainPlayer::Show(SDL_Renderer* des) {
@@ -53,8 +64,8 @@ void MainPlayer::Show(SDL_Renderer* des) {
         frame = 0;
     }
 
-    rect.x = xPos;
-    rect.y = yPos;
+    rect.x = xPos - mapX;
+    rect.y = yPos - mapY;
 
     SDL_Rect* currentClip = &frameCLip[frame];
     SDL_Rect renderQuad = {rect.x, rect.y, widthFrame, heightFrame};
@@ -69,10 +80,12 @@ void MainPlayer::HandleInput(SDL_Event events, SDL_Renderer* screen) {
         case SDLK_RIGHT:
             status = WALK_RIGHT;
             inputType.right = 1;
+            inputType.left = 0;
             break;
         case SDLK_LEFT:
             status = WALK_LEFT;
             inputType.left = 1;
+            inputType.right = 0;
             break;
         }
     } else if (events.type == SDL_KEYUP)
@@ -86,5 +99,115 @@ void MainPlayer::HandleInput(SDL_Event events, SDL_Renderer* screen) {
             inputType.left = 0;
             break;
         }
+    }
+}
+
+void MainPlayer::DoPlayer(Map& mapData) {
+    xVal = 0;
+    yVal += GRAVITY_SPEED;
+
+    if (yVal >= MAX_FALL_SPEED) {
+        yVal = MAX_FALL_SPEED;
+    }
+
+    if (inputType.left == 1) {
+        xVal -= PLAYER_SPEED;
+    } else if (inputType.right == 1) {
+        xVal += PLAYER_SPEED;
+    }
+
+    CheckToMap(mapData);
+    CenterEntityOnMap(mapData);
+}
+
+void MainPlayer::CenterEntityOnMap(Map& mapData) {
+    mapData.startX = xPos - (WINDOW_WIDTH/2);
+    if (mapData.startX < 0) {
+        mapData.startX = 0;
+    }
+    if (mapData.startX + WINDOW_WIDTH >= mapData.maxX) {
+        mapData.startX = mapData.maxX - WINDOW_WIDTH;
+    }
+
+    mapData.startY = yPos - (WINDOW_HEIGHT/2);
+    if (mapData.startY < 0) {
+        mapData.startY = 0;
+    }
+    if (mapData.startY + WINDOW_HEIGHT >= mapData.maxY) {
+        mapData.startY = mapData.maxY - WINDOW_HEIGHT;
+    }
+}
+
+void MainPlayer::CheckToMap(Map& mapData) {
+    int x1 = 0;
+    int x2 = 0;
+
+    int y1 = 0;
+    int y2 = 0;
+
+    // check horizontal
+    int heightMin = heightFrame < TILE_SIZE ? heightFrame : TILE_SIZE;
+
+    x1 = (xPos + xVal)/TILE_SIZE;
+    x2 = (xPos + xVal + widthFrame)/TILE_SIZE;
+
+    y1 = (yPos)/TILE_SIZE;
+    y2 = (yPos + heightMin - 1)/TILE_SIZE;
+
+    if (x1 >= 0 && x2 < MAX_MAP_X && y1 >= 0 && y2 < MAX_MAP_Y)
+    {
+        if (xVal > 0)     // main player is moving right
+        {
+            if (mapData.tile[y1][x2] != BLANK_TILE || mapData.tile[y2][x2] != BLANK_TILE) {
+                xPos = x2*TILE_SIZE;
+                xPos -= (widthFrame + 1);
+                xVal = 0;
+            } 
+        } else if (xVal < 0)
+        {
+            if (mapData.tile[y1][x1] != BLANK_TILE || mapData.tile[y2][x1] != BLANK_TILE)
+            {
+                xPos = (x1 + 1) * TILE_SIZE;
+                xVal = 0;
+            }
+        }
+    }
+
+    // check vertical
+    int widthMin = widthFrame < TILE_SIZE ? widthFrame : TILE_SIZE;
+    
+    x1 = xPos/TILE_SIZE;
+    x2 = (xPos + widthMin)/TILE_SIZE;
+
+    y1 = (yPos + yVal)/TILE_SIZE;
+    y2 = (yPos + yVal + heightFrame - 1)/TILE_SIZE;
+
+    if (x1 >= 0 && x2 < MAX_MAP_X && y1 >= 0 && y2 < MAX_MAP_Y) 
+    {
+        if (yVal > 0) {
+            if (mapData.tile[y2][x1] != BLANK_TILE || mapData.tile[y2][x2] != BLANK_TILE)
+            {
+                yPos = y2*TILE_SIZE;
+                yPos -= (heightFrame + 1);
+                yVal = 0;
+                onGround = true;
+            }
+        } else if (yVal < 0) {
+            if (mapData.tile[y2][x1] != BLANK_TILE || mapData.tile[y2][x2] != BLANK_TILE)
+            {
+                yPos = (y1 + 1)*TILE_SIZE;
+                yVal = 0;
+            }
+        }
+    }
+
+    xPos += xVal;
+    yPos += yVal;
+
+    if (xPos < 0) {
+        xPos = 0;
+    } else if(xPos + widthFrame > mapData.maxX) 
+    {
+        xPos = mapData.maxX - widthFrame - 1;
     }
 }

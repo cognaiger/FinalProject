@@ -52,11 +52,13 @@ void GameMap::LoadTiles(SDL_Renderer* screen) {
 }
 
 void GameMap::DrawMap(SDL_Renderer* screen) {
+    // coordinate we begin to render tile
     int x1 = 0;
-    int x2 = 0;
-
     int y1 = 0;
+
+    // coordinate we end up rendering
     int y2 = 0;
+    int x2 = 0;
 
     int mapX = 0;
     int mapY = 0;

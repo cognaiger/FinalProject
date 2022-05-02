@@ -20,15 +20,29 @@ public:
     GameMap() {;}
     ~GameMap() {;}
 
+    // load text-map into gameMap
     void LoadMap(char* path);
-    // load tile image into 'tileMat'
-    void LoadTiles(SDL_Renderer* screen);
-    // for each value on map, draw corresponding tile
-    void DrawMap(SDL_Renderer* screen);
-private:
-    Map gameMap;
-    TileMat tileMat[MAX_TILES];
 
+    // load image of each tile into 'tileMat'
+    void LoadTiles(SDL_Renderer* screen);
+
+    /*
+    base on startX and startY of map to decide range of map
+    for each value on map, draw corresponding tile
+    */
+    void DrawMap(SDL_Renderer* screen);
+
+    // return gameMap
+    Map GetMap() const { return gameMap; }
+
+    // assign 'gameMap' by argument
+    void SetMap(Map& mapData) { gameMap = mapData; };
+private:
+    // contain info: start coordinates, max x-pos, y-pos of map, path to file text-map
+    Map gameMap;
+
+    // each tileMat represent 1 tile image
+    TileMat tileMat[MAX_TILES];
 };
 
 #endif

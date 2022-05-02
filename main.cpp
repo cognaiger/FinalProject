@@ -3,8 +3,13 @@
 #include"GameMap.h"
 #include"MainPlayer.h"
 
+// set up window and renderer
 bool init();
+
+// load background on renderer
 bool loadBackground(); 
+
+// shut up everything
 void close();
 
 BaseObject gBackground;
@@ -79,12 +84,15 @@ int main(int argc, char* argv[])
     char pathMap[] = "map/map01.dat";
     mainMap.LoadMap(pathMap);
     mainMap.LoadTiles(gSurface);
+    Map mapData = mainMap.GetMap();
 
     MainPlayer gPlayer;
     gPlayer.LoadImg("img/player_right.png", gSurface);
     gPlayer.SetClips();
     
     bool quit = false;
+
+    // game loop
     while (!quit) {
         while (SDL_PollEvent(&gEvent) != 0) {
             if (gEvent.type == SDL_QUIT) {
@@ -100,9 +108,12 @@ int main(int argc, char* argv[])
 
         gBackground.Render(gSurface);
 
-        mainMap.DrawMap(gSurface);
-
+        gPlayer.SetMapXY(mapData.startX, mapData.startY);
+        gPlayer.DoPlayer(mapData);
         gPlayer.Show(gSurface);
+
+        mainMap.SetMap(mapData);
+        mainMap.DrawMap(gSurface);
 
         SDL_RenderPresent(gSurface);
     }

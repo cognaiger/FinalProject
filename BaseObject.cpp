@@ -12,7 +12,6 @@ BaseObject::~BaseObject() {
     free();
 }
 
-// load texture into pObject
 bool BaseObject::LoadImg(std::string path, SDL_Renderer* screen) {
     SDL_Texture* newTexture = NULL;
 
@@ -33,7 +32,6 @@ bool BaseObject::LoadImg(std::string path, SDL_Renderer* screen) {
     return pObject != NULL;
 }
 
-// render texture
 void BaseObject::Render(SDL_Renderer* des, const SDL_Rect* clip /* = NULL */) {
     SDL_Rect renderquad = {rect.x, rect.y, rect.w, rect.h};
     SDL_RenderCopy(des, pObject, clip, &renderquad);
