@@ -2,6 +2,7 @@
 #include"BaseObject.h"
 #include"GameMap.h"
 #include"MainPlayer.h"
+#include"Timer.h"
 
 // set up window and renderer
 bool init();
@@ -13,21 +14,8 @@ bool loadBackground();
 void close();
 
 BaseObject gBackground;
- 
-void close()
-{
-    gBackground.free();
 
-    SDL_DestroyRenderer(gSurface);
-    gSurface = NULL;
-
-    SDL_DestroyWindow(gWindow);
-    gWindow = NULL;
-
-    IMG_Quit();
-    SDL_Quit();
-}
- 
+// set up window and renderer
 bool init()
 {
     bool success = true;
@@ -63,6 +51,21 @@ bool init()
 
     return success;
 }
+ 
+void close()
+{
+    gBackground.free();
+
+    SDL_DestroyRenderer(gSurface);
+    gSurface = NULL;
+
+    SDL_DestroyWindow(gWindow);
+    gWindow = NULL;
+
+    IMG_Quit();
+    SDL_Quit();
+}
+ 
 
 bool loadBackground() {
     bool ret = gBackground.LoadImg("img/background.png", gSurface);
@@ -80,6 +83,8 @@ int main(int argc, char* argv[])
     if (loadBackground() == 0)
         return -1;
 
+    Timer fpsTimer;
+
     GameMap mainMap;
     char pathMap[] = "map/map01.dat";
     mainMap.LoadMap(pathMap);
@@ -94,6 +99,8 @@ int main(int argc, char* argv[])
 
     // game loop
     while (!quit) {
+        fpsTimer.start();
+
         while (SDL_PollEvent(&gEvent) != 0) {
             if (gEvent.type == SDL_QUIT) {
                 quit = true;
@@ -116,6 +123,14 @@ int main(int argc, char* argv[])
         mainMap.DrawMap(gSurface);
 
         SDL_RenderPresent(gSurface);
+
+        int realImpTime = fpsTimer.GetTicks();
+        int timeOneFrame = 1000/FPS;   // ms
+
+        if (realImpTime < timeOneFrame) {
+            int delayTime = timeOneFrame - realImpTime;
+            SDL_Delay(delayTime);
+        }
     }
  
     close();

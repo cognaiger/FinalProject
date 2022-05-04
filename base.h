@@ -12,6 +12,9 @@ static SDL_Window* gWindow = NULL;
 static SDL_Renderer* gSurface = NULL;
 static SDL_Event gEvent;
 
+// fps
+const int FPS = 30;
+
 // screen information
 const int WINDOW_WIDTH = 1280;
 const int WINDOW_HEIGHT = 640;
@@ -58,5 +61,6 @@ typedef struct Map {
 
     char* fileName;
 };
+
 
 #endif
