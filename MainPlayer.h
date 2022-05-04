@@ -8,6 +8,7 @@
 # define GRAVITY_SPEED 0.8
 # define MAX_FALL_SPEED 10
 # define PLAYER_SPEED 8
+# define PLAYER_JUMP_VALUE 18
 
 class MainPlayer : public BaseObject 
 {
@@ -26,14 +27,21 @@ public:
     /*
     based on status to render approriate image(left or right) on renderer
     based on key action to increase frame to choose appropriate frame -> smooth movement
+    decide coordinate of player based on current position and new mapX, mapY
     */
     void Show(SDL_Renderer* des);
+
+    // base on key press action to modify 'inputType' : hold ongoing key press
     void HandleInput(SDL_Event events, SDL_Renderer* screen);
     
-    // create info about frame-rect
+    // create info about frame-rect on big picture
     void SetClips();
 
     void DoPlayer(Map& mapData);
+
+    /*
+    handle interaction between player and map in 4 directions
+    */
     void CheckToMap(Map& mapData);
 
     /* base on current position of player to decide where new map locate
@@ -41,6 +49,7 @@ public:
     */
     void CenterEntityOnMap(Map& mapData);
 
+    // use to assign new start coordinate of map to mapX, mapY
     void SetMapXY(const int mapX, const int mapY) { this -> mapX = mapX; this -> mapY = mapY; };
 private:
     float xVal;
@@ -59,8 +68,11 @@ private:
 
     bool onGround;
 
+    // hold coordinate of place starting new map
     int mapX;
     int mapY;
+
+    int comeBackTime;
 };
 
 #endif

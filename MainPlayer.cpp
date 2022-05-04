@@ -17,6 +17,7 @@ MainPlayer::MainPlayer() {
     onGround = false;
     mapX = 0;
     mapY = 0;
+    comeBackTime = 0;
 }
 
 MainPlayer::~MainPlayer() {
@@ -47,10 +48,19 @@ void MainPlayer::SetClips() {
 void MainPlayer::Show(SDL_Renderer* des) {
     if (status == WALK_LEFT) 
     {
-        LoadImg("img/player_left.png", des);
+        if (onGround == true) {
+            LoadImg("img/player_left.png", des);
+        } else {
+            LoadImg("img/jum_left.png", des);
+        }
     } else
     {
-        LoadImg("img/player_right.png", des);
+        if (onGround == true) {
+            LoadImg("img/player_right.png", des);
+        } else {
+            LoadImg("img/jum_right.png", des);
+        }
+        
     }
 
     if (inputType.left == 1 || inputType.right == 1) 
@@ -64,12 +74,14 @@ void MainPlayer::Show(SDL_Renderer* des) {
         frame = 0;
     }
 
-    rect.x = xPos - mapX;
-    rect.y = yPos - mapY;
+    if (comeBackTime == 0) {
+        rect.x = xPos - mapX;
+        rect.y = yPos - mapY;
 
-    SDL_Rect* currentClip = &frameCLip[frame];
-    SDL_Rect renderQuad = {rect.x, rect.y, widthFrame, heightFrame};
-    SDL_RenderCopy(des, pObject, currentClip, &renderQuad);
+        SDL_Rect* currentClip = &frameCLip[frame];
+        SDL_Rect renderQuad = {rect.x, rect.y, widthFrame, heightFrame};
+        SDL_RenderCopy(des, pObject, currentClip, &renderQuad);
+    }
 }
 
 void MainPlayer::HandleInput(SDL_Event events, SDL_Renderer* screen) {
@@ -100,24 +112,59 @@ void MainPlayer::HandleInput(SDL_Event events, SDL_Renderer* screen) {
             break;
         }
     }
+
+    if (events.type == SDL_MOUSEBUTTONDOWN)
+    {
+        if (events.button.button == SDL_BUTTON_RIGHT) {
+            inputType.jump = 1;
+        }
+    }
 }
 
 void MainPlayer::DoPlayer(Map& mapData) {
-    xVal = 0;
-    yVal += GRAVITY_SPEED;
+    if (comeBackTime == 0) {
+        xVal = 0;
+        yVal += GRAVITY_SPEED;
 
-    if (yVal >= MAX_FALL_SPEED) {
-        yVal = MAX_FALL_SPEED;
+        if (yVal >= MAX_FALL_SPEED) {
+            yVal = MAX_FALL_SPEED;
+        }
+
+        if (inputType.left == 1) {
+            xVal -= PLAYER_SPEED;
+        } else if (inputType.right == 1) {
+            xVal += PLAYER_SPEED;
+        }
+
+        if (inputType.jump == 1) {
+            if (onGround == true) {
+                yVal = -PLAYER_JUMP_VALUE;
+                onGround = false;
+            }
+            inputType.jump = 0;
+        }
+
+        CheckToMap(mapData);
+        CenterEntityOnMap(mapData);
     }
 
-    if (inputType.left == 1) {
-        xVal -= PLAYER_SPEED;
-    } else if (inputType.right == 1) {
-        xVal += PLAYER_SPEED;
-    }
+    if (comeBackTime > 0) {
+        comeBackTime--;
+        if (comeBackTime == 0) {
+            if (xPos > 256) {
+                xPos -= 256;        // 4 tile map
+                mapX -= 256;
+            } else {
+                xPos = 0;
+            }
 
-    CheckToMap(mapData);
-    CenterEntityOnMap(mapData);
+            yPos = 0;
+            xVal = 0;
+            yVal = 0;
+        }
+    }
+    
+    
 }
 
 void MainPlayer::CenterEntityOnMap(Map& mapData) {
@@ -159,7 +206,7 @@ void MainPlayer::CheckToMap(Map& mapData) {
         if (xVal > 0)     // main player is moving right
         {
             if (mapData.tile[y1][x2] != BLANK_TILE || mapData.tile[y2][x2] != BLANK_TILE) {
-                xPos = x2*TILE_SIZE;
+                xPos = x2 * TILE_SIZE;
                 xPos -= (widthFrame + 1);
                 xVal = 0;
             } 
@@ -209,5 +256,9 @@ void MainPlayer::CheckToMap(Map& mapData) {
     } else if(xPos + widthFrame > mapData.maxX) 
     {
         xPos = mapData.maxX - widthFrame - 1;
+    }
+
+    if (yPos > mapData.maxY) {
+        comeBackTime = 60;
     }
 }
