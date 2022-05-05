@@ -103,6 +103,22 @@ void MainPlayer::HandleInput(SDL_Event events, SDL_Renderer* screen) {
     {
         if (events.button.button == SDL_BUTTON_RIGHT) {
             inputType.jump = 1;
+        } else if (events.button.button == SDL_BUTTON_LEFT) {
+            BulletObject* pBullet = new BulletObject();
+            pBullet -> LoadImg("img/bullet.png", screen);
+
+            if (status == WALK_LEFT) {
+                pBullet -> SetBulletDir(BulletObject::DIR_LEFT);
+                pBullet -> SetRect(rect.x, rect.y + heightFrame*0.25);
+            } else {
+                pBullet -> SetBulletDir(BulletObject::DIR_RIGHT);
+                pBullet -> SetRect(rect.x + widthFrame - 20, rect.y + heightFrame*0.25);
+            }
+
+            pBullet -> SetXVal(20);
+            pBullet -> SetIsMove(true);
+
+            pBulletList.push_back(pBullet);
         }
     }
 }
@@ -264,5 +280,25 @@ void MainPlayer::UpdateImagePlayer(SDL_Renderer* des) {
         } else {
             LoadImg("img/jum_right.png", des);
         }
+    }
+}
+
+void MainPlayer::HandleBullet(SDL_Renderer* des) {
+    for (int i = 0; i < pBulletList.size(); i++) {
+        BulletObject* pBullet = pBulletList[i];
+        if (pBullet != NULL) {
+            if (pBullet -> GetIsMove() == true) {
+                pBullet -> HandleMove(WINDOW_WIDTH, WINDOW_HEIGHT);
+                pBullet -> Render(des);
+            }
+            else {
+                pBulletList.erase(pBulletList.begin() + i);
+                if (pBullet != NULL) {
+                    delete pBullet;
+                    pBullet = NULL;
+                }
+            }
+        }
+
     }
 }

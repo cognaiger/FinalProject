@@ -115,6 +115,7 @@ int main(int argc, char* argv[])
 
         gBackground.Render(gSurface);
 
+        gPlayer.HandleBullet(gSurface);
         gPlayer.SetMapXY(mapData.startX, mapData.startY);
         gPlayer.DoPlayer(mapData);
         gPlayer.Show(gSurface);

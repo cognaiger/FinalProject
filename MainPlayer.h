@@ -1,8 +1,10 @@
 #ifndef MAIN_PLAYER_H
 #define MAIN_PLAYER_H
 
+#include<vector>
 #include"base.h"
 #include"BaseObject.h"
+#include"BulletObject.h"
 
 # define FRAME_NUM 8
 # define GRAVITY_SPEED 0.8
@@ -60,7 +62,15 @@ public:
     // base on current status (right, left, jump) to decide which spirit-image to load 
     // (utility func)
     void UpdateImagePlayer(SDL_Renderer* des);
+
+    void SetBulletList(std::vector<BulletObject*> bulletList) { pBulletList = bulletList; }
+
+    std::vector<BulletObject*> GetBulletList() const { return pBulletList; }
+
+    void HandleBullet(SDL_Renderer* des);
 private:
+    std::vector<BulletObject*> pBulletList;
+
     // distance player will move horizontally
     float xVal;
     // distance player will move vertically
