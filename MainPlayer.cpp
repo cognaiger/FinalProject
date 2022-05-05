@@ -105,7 +105,8 @@ void MainPlayer::HandleInput(SDL_Event events, SDL_Renderer* screen) {
             inputType.jump = 1;
         } else if (events.button.button == SDL_BUTTON_LEFT) {
             BulletObject* pBullet = new BulletObject();
-            pBullet -> LoadImg("img/bullet.png", screen);
+            pBullet -> SetBulletType(BulletObject::LASER_BULLET);
+            pBullet -> LoadImgBullet(screen);
 
             if (status == WALK_LEFT) {
                 pBullet -> SetBulletDir(BulletObject::DIR_LEFT);
@@ -116,6 +117,7 @@ void MainPlayer::HandleInput(SDL_Event events, SDL_Renderer* screen) {
             }
 
             pBullet -> SetXVal(20);
+            pBullet -> SetYVal(20);
             pBullet -> SetIsMove(true);
 
             pBulletList.push_back(pBullet);
