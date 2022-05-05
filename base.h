@@ -44,21 +44,22 @@ typedef struct Input {
     int jump;
 };
 
-// map that we render on screen
+// chunk of information about main map
 typedef struct Map {
-    // X-coordinate that map begin
+    // X-coordinate that map begin (pixel)
     int startX;
-    // Y-coordinate that map begin
+    // Y-coordinate that map begin (pixel)
     int startY;
 
-    // max X-coordinate
+    // max X-coordinate (pixel)
     int maxX;
-    // max Y-coordinate
+    // max Y-coordinate (pixel)
     int maxY;
 
     // array that contain text-map
     int tile[MAX_MAP_Y][MAX_MAP_X];
 
+    // point to location of file text-map
     char* fileName;
 };
 

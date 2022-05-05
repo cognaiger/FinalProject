@@ -17,8 +17,9 @@ public:
     ~MainPlayer();
 
     enum WalkType{
-        WALK_RIGHT = 0,
-        WALK_LEFT = 1
+        WALK_NONE = 0,
+        WALK_RIGHT = 1,
+        WALK_LEFT = 2
     };
 
     // load 8-frame-picture and take value of width frame and height frame
@@ -31,12 +32,16 @@ public:
     */
     void Show(SDL_Renderer* des);
 
-    // base on key press action to modify 'inputType' : hold ongoing key press
+    // base on key press action to modify 'inputType' and 'status'
     void HandleInput(SDL_Event events, SDL_Renderer* screen);
     
     // create info about frame-rect on big picture
     void SetClips();
 
+    /* 
+    handle distance player will move vertically and horizonally (xVal, yVal)
+    based on current input
+    */
     void DoPlayer(Map& mapData);
 
     /*
@@ -51,19 +56,33 @@ public:
 
     // use to assign new start coordinate of map to mapX, mapY
     void SetMapXY(const int mapX, const int mapY) { this -> mapX = mapX; this -> mapY = mapY; };
+
+    // base on current status (right, left, jump) to decide which spirit-image to load 
+    // (utility func)
+    void UpdateImagePlayer(SDL_Renderer* des);
 private:
+    // distance player will move horizontally
     float xVal;
+    // distance player will move vertically
     float yVal;
 
+    // hold horizontal position
     float xPos;
+    // hold vertical position
     float yPos;
 
     int widthFrame;
     int heightFrame;
 
     SDL_Rect frameCLip[FRAME_NUM];
+
+    // hold input action
     Input inputType;
+
+    // hold info about current frame of spirit picture
     int frame;
+
+    // show player is runing left or right
     int status;
 
     bool onGround;

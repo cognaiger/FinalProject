@@ -13,6 +13,8 @@ BaseObject::~BaseObject() {
 }
 
 bool BaseObject::LoadImg(std::string path, SDL_Renderer* screen) {
+    free();
+
     SDL_Texture* newTexture = NULL;
 
     SDL_Surface* loadSurface = IMG_Load(path.c_str());

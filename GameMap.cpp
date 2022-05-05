@@ -60,6 +60,7 @@ void GameMap::DrawMap(SDL_Renderer* screen) {
     int y2 = 0;
     int x2 = 0;
 
+    // decide value of tile map at this coordinate
     int mapX = 0;
     int mapY = 0;
 

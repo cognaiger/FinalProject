@@ -8,7 +8,7 @@ MainPlayer::MainPlayer() {
     yVal = 0;
     widthFrame = 0;
     heightFrame = 0;
-    status = -1;
+    status = WALK_NONE;
     inputType.right = 0;
     inputType.left = 0;
     inputType.down = 0;
@@ -46,22 +46,7 @@ void MainPlayer::SetClips() {
 }
 
 void MainPlayer::Show(SDL_Renderer* des) {
-    if (status == WALK_LEFT) 
-    {
-        if (onGround == true) {
-            LoadImg("img/player_left.png", des);
-        } else {
-            LoadImg("img/jum_left.png", des);
-        }
-    } else
-    {
-        if (onGround == true) {
-            LoadImg("img/player_right.png", des);
-        } else {
-            LoadImg("img/jum_right.png", des);
-        }
-        
-    }
+    UpdateImagePlayer(des);
 
     if (inputType.left == 1 || inputType.right == 1) 
     {
@@ -75,6 +60,7 @@ void MainPlayer::Show(SDL_Renderer* des) {
     }
 
     if (comeBackTime == 0) {
+        // modify player position relatively to map
         rect.x = xPos - mapX;
         rect.y = yPos - mapY;
 
@@ -113,7 +99,7 @@ void MainPlayer::HandleInput(SDL_Event events, SDL_Renderer* screen) {
         }
     }
 
-    if (events.type == SDL_MOUSEBUTTONDOWN)
+    if (events.type == SDL_MOUSEBUTTONDOWN)         // jump may be used with run left or right
     {
         if (events.button.button == SDL_BUTTON_RIGHT) {
             inputType.jump = 1;
@@ -150,10 +136,10 @@ void MainPlayer::DoPlayer(Map& mapData) {
 
     if (comeBackTime > 0) {
         comeBackTime--;
-        if (comeBackTime == 0) {
+        if (comeBackTime == 0) {             // reset again
+            onGround = false;
             if (xPos > 256) {
                 xPos -= 256;        // 4 tile map
-                mapX -= 256;
             } else {
                 xPos = 0;
             }
@@ -163,8 +149,6 @@ void MainPlayer::DoPlayer(Map& mapData) {
             yVal = 0;
         }
     }
-    
-    
 }
 
 void MainPlayer::CenterEntityOnMap(Map& mapData) {
@@ -201,7 +185,7 @@ void MainPlayer::CheckToMap(Map& mapData) {
     y1 = (yPos)/TILE_SIZE;
     y2 = (yPos + heightMin - 1)/TILE_SIZE;
 
-    if (x1 >= 0 && x2 < MAX_MAP_X && y1 >= 0 && y2 < MAX_MAP_Y)
+    if (x1 >= 0 && x2 < MAX_MAP_X && y1 >= 0 && y2 < MAX_MAP_Y)       // valid pos in map limit
     {
         if (xVal > 0)     // main player is moving right
         {
@@ -210,7 +194,7 @@ void MainPlayer::CheckToMap(Map& mapData) {
                 xPos -= (widthFrame + 1);
                 xVal = 0;
             } 
-        } else if (xVal < 0)
+        } else if (xVal < 0)      // moving left
         {
             if (mapData.tile[y1][x1] != BLANK_TILE || mapData.tile[y2][x1] != BLANK_TILE)
             {
@@ -237,7 +221,11 @@ void MainPlayer::CheckToMap(Map& mapData) {
                 yPos = y2*TILE_SIZE;
                 yPos -= (heightFrame + 1);
                 yVal = 0;
+
                 onGround = true;
+                if (status == WALK_NONE) {
+                    status = WALK_RIGHT;
+                }
             }
         } else if (yVal < 0) {
             if (mapData.tile[y2][x1] != BLANK_TILE || mapData.tile[y2][x2] != BLANK_TILE)
@@ -251,14 +239,30 @@ void MainPlayer::CheckToMap(Map& mapData) {
     xPos += xVal;
     yPos += yVal;
 
-    if (xPos < 0) {
+    if (xPos < 0) {           // can get over map limit
         xPos = 0;
     } else if(xPos + widthFrame > mapData.maxX) 
     {
         xPos = mapData.maxX - widthFrame - 1;
     }
 
-    if (yPos > mapData.maxY) {
+    if (yPos > mapData.maxY) {    // fall into hole
         comeBackTime = 60;
+    }
+}
+
+void MainPlayer::UpdateImagePlayer(SDL_Renderer* des) {
+    if (onGround == true) {
+        if (status == WALK_LEFT) {
+            LoadImg("img/player_left.png", des);
+        } else {
+            LoadImg("img/player_right.png", des);
+        }
+    } else {
+        if (status == WALK_LEFT) {
+            LoadImg("img/jum_left.png", des);
+        } else {
+            LoadImg("img/jum_right.png", des);
+        }
     }
 }
