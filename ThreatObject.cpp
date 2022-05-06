@@ -10,6 +10,11 @@ ThreatObject::ThreatObject() {
     onGround = 0;
     comeBackTime = 0;
     frame = 0;
+
+    animationA = 0;
+    animationB = 0;
+    inputType.left = 0;
+    typeMove = STATIC_THREAT;
 }
 
 ThreatObject::~ThreatObject() {
@@ -59,18 +64,17 @@ void ThreatObject::DoThreat(Map& mapData) {
             yVal = THREAT_MAX_FALL_SPEED;
         }
 
+        if (inputType.left == 1) {
+            xVal -= THREAT_SPEED;
+        } else if (inputType.right == 1) {
+            xVal += THREAT_SPEED;
+        }
+
         CheckToMap(mapData);
     } else if (comeBackTime > 0) {
         comeBackTime--;
         if (comeBackTime == 0) {
-            xVal = 0;
-            yVal = 0;
-            if (xPos > 256) {
-                xPos -= 256;
-            } else {
-                xPos = 0;
-            }
-            yPos = 0;
+            InitThreat();
         }
     }
 }
@@ -164,4 +168,42 @@ void ThreatObject::CheckToMap(Map& mapData) {
     if (yPos > mapData.maxY) {    // fall into hole
         comeBackTime = 60;
     }
+}
+
+void ThreatObject::ImpMoveType(SDL_Renderer* screen) {
+    if (typeMove == STATIC_THREAT) {
+        ; // do nothing
+    } else if (typeMove == MOVE_IN_SPACE_THREAT) {
+        if (onGround == true) {
+            if (xPos > animationB) {
+                inputType.left = 1;
+                inputType.right = 0;
+                LoadImg("img/threat_left.png", screen);
+            } else if (xPos < animationA) {
+                inputType.left = 0;
+                inputType.right = 1;
+                LoadImg("img/threat_right.png", screen);
+            }
+        } else {
+            if (inputType.left == 1) {
+                LoadImg("img/threat_left.png", screen);
+            } else {
+                LoadImg("img/threat_right.png", screen);
+            }
+        }
+    }
+}
+
+void ThreatObject::InitThreat() {
+    xVal = 0;
+    yVal = 0;
+    if (xPos > 256) {
+        xPos -= 256;
+        animationA -= 256;
+        animationB -= 256;
+    } else {
+        xPos = 0;
+    }
+    yPos = 0;
+    inputType.left = 1;
 }

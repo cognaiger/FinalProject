@@ -6,12 +6,18 @@
 
 #define THREAT_FRAME_NUM 8
 #define THREAT_MAX_FALL_SPEED 10
+#define THREAT_SPEED 3
 
 class ThreatObject : public BaseObject
 {
 public:
     ThreatObject();
     ~ThreatObject();
+
+    enum TypeMove {
+        STATIC_THREAT = 0,
+        MOVE_IN_SPACE_THREAT = 1
+    };
 
     void SetXVal(const float& xVal_) { xVal = xVal_; }
     void SetYVal(const float& yVal_) { yVal = yVal_; } 
@@ -23,6 +29,8 @@ public:
 
     void SetMapXY(const int& mx, const int& my) { mapX = mx; mapY = my; }
 
+    void InitThreat();
+
     void SetClips();
     bool LoadImg(std::string path, SDL_Renderer* screen);
     void Show(SDL_Renderer* des);
@@ -32,6 +40,11 @@ public:
 
     void DoThreat(Map& mapData);
     void CheckToMap(Map& mapData);
+
+    void SetTypeMove(const int& typeMove_) { typeMove = typeMove_; }
+    void SetAnimationPos(const int& posA, const int& posB) { animationA = posA; animationB = posB; }
+    void SetInputLeft(const int& ipLeft) { inputType.left = ipLeft; }
+    void ImpMoveType(SDL_Renderer* screen);
 
 private:
     // hold limit of map
@@ -50,6 +63,12 @@ private:
     int widthFrame;
     int heightFrame;
     int frame;
+
+    int typeMove;
+    int animationA;
+    int animationB;
+
+    Input inputType;
 };
 
 #endif

@@ -78,12 +78,33 @@ bool loadBackground() {
 std::vector<ThreatObject*> MakeThreatList() {
     std::vector<ThreatObject*> listThreat;
 
+    ThreatObject* dynamicThreat = new ThreatObject[20];
+    for (int i = 0; i < 20; i++) {
+        ThreatObject* pThreat = (dynamicThreat + i);
+        if (pThreat != NULL) {
+            pThreat -> LoadImg("img/threat_left.png", gSurface);
+            pThreat -> SetClips();
+            pThreat -> SetTypeMove(ThreatObject::MOVE_IN_SPACE_THREAT);
+            pThreat -> SetInputLeft(1);
+            pThreat -> SetXPos(500 + i*500);
+            pThreat -> SetYPos(250);
+
+            int pos1 = pThreat -> GetXPos() - 60;
+            int pos2 = pThreat -> GetXPos() + 60;
+            pThreat -> SetAnimationPos(pos1, pos2);
+
+            listThreat.push_back(pThreat);
+        }
+    }
+
+
     ThreatObject* threatObj = new ThreatObject[20];
     for (int i = 0; i < 20; i++) {
         ThreatObject* pThreat = (threatObj + i);
         if (pThreat != NULL) {
             pThreat -> LoadImg("img/threat_level.png", gSurface);
             pThreat -> SetClips();
+            pThreat -> SetTypeMove(ThreatObject::STATIC_THREAT);
             pThreat -> SetXPos(700 + i*1200);
             pThreat -> SetYPos(250);
 
@@ -148,6 +169,7 @@ int main(int argc, char* argv[])
             ThreatObject* pThreat = threatList[i];
             if (pThreat != NULL) {
                 pThreat -> SetMapXY(mapData.startX, mapData.startY);
+                pThreat -> ImpMoveType(gSurface);
                 pThreat->DoThreat(mapData);
                 pThreat->Show(gSurface);
             }
