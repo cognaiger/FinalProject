@@ -18,6 +18,7 @@ MainPlayer::MainPlayer() {
     mapX = 0;
     mapY = 0;
     comeBackTime = 0;
+    coinCount = 0;
 }
 
 MainPlayer::~MainPlayer() {
@@ -207,14 +208,28 @@ void MainPlayer::CheckToMap(Map& mapData) {
     {
         if (xVal > 0)     // main player is moving right
         {
-            if (mapData.tile[y1][x2] != BLANK_TILE || mapData.tile[y2][x2] != BLANK_TILE) {
+            int val1 = mapData.tile[y1][x2];
+            int val2 = mapData.tile[y2][x2];
+
+            if (val1 == COIN_TILE || val2 == COIN_TILE) {
+                mapData.tile[y1][x2] = 0;
+                mapData.tile[y2][x2] = 0;
+                IncreaseCoin();
+            } else if (val1 != BLANK_TILE || val2 != BLANK_TILE) {
                 xPos = x2 * TILE_SIZE;
                 xPos -= (widthFrame + 1);
                 xVal = 0;
             } 
         } else if (xVal < 0)      // moving left
         {
-            if (mapData.tile[y1][x1] != BLANK_TILE || mapData.tile[y2][x1] != BLANK_TILE)
+            int val1 = mapData.tile[y1][x1];
+            int val2 = mapData.tile[y2][x1];
+
+            if (val1 == COIN_TILE || val2 == COIN_TILE) {
+                mapData.tile[y1][x1] = 0;
+                mapData.tile[y2][x1] = 0;
+                IncreaseCoin();
+            } else if (val1 != BLANK_TILE || val2 != BLANK_TILE)
             {
                 xPos = (x1 + 1) * TILE_SIZE;
                 xVal = 0;
@@ -234,7 +249,13 @@ void MainPlayer::CheckToMap(Map& mapData) {
     if (x1 >= 0 && x2 < MAX_MAP_X && y1 >= 0 && y2 < MAX_MAP_Y) 
     {
         if (yVal > 0) {
-            if (mapData.tile[y2][x1] != BLANK_TILE || mapData.tile[y2][x2] != BLANK_TILE)
+            int val1 = mapData.tile[y2][x1];
+            int val2 = mapData.tile[y2][x2];
+            if (val1 == COIN_TILE || val2 == COIN_TILE) {
+                mapData.tile[y2][x1] = 0;
+                mapData.tile[y2][x2] = 0;
+                IncreaseCoin();
+            } else if (val1 != BLANK_TILE || val2 != BLANK_TILE)
             {
                 yPos = y2*TILE_SIZE;
                 yPos -= (heightFrame + 1);
@@ -246,7 +267,14 @@ void MainPlayer::CheckToMap(Map& mapData) {
                 }
             }
         } else if (yVal < 0) {
-            if (mapData.tile[y2][x1] != BLANK_TILE || mapData.tile[y2][x2] != BLANK_TILE)
+            int val1 = mapData.tile[y2][x1];
+            int val2 = mapData.tile[y2][x2];
+
+            if (val1 == COIN_TILE || val2 == COIN_TILE) {
+                mapData.tile[y2][x1] = 0;
+                mapData.tile[y2][x2] = 0;
+                IncreaseCoin();
+            } else if (val1 != BLANK_TILE || val2 != BLANK_TILE)
             {
                 yPos = (y1 + 1)*TILE_SIZE;
                 yVal = 0;
@@ -303,4 +331,8 @@ void MainPlayer::HandleBullet(SDL_Renderer* des) {
         }
 
     }
+}
+
+void MainPlayer::IncreaseCoin() {
+    coinCount++;
 }

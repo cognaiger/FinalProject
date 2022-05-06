@@ -68,7 +68,11 @@ public:
     std::vector<BulletObject*> GetBulletList() const { return pBulletList; }
 
     void HandleBullet(SDL_Renderer* des);
+
+    void IncreaseCoin();
 private:
+    int coinCount;
+
     std::vector<BulletObject*> pBulletList;
 
     // distance player will move horizontally
