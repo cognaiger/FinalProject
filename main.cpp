@@ -3,6 +3,7 @@
 #include"GameMap.h"
 #include"MainPlayer.h"
 #include"Timer.h"
+#include"ThreatObject.h"
 
 // set up window and renderer
 bool init();
@@ -73,7 +74,25 @@ bool loadBackground() {
         return false;
     return true;
 }
- 
+
+std::vector<ThreatObject*> MakeThreatList() {
+    std::vector<ThreatObject*> listThreat;
+
+    ThreatObject* threatObj = new ThreatObject[20];
+    for (int i = 0; i < 20; i++) {
+        ThreatObject* pThreat = (threatObj + i);
+        if (pThreat != NULL) {
+            pThreat -> LoadImg("img/threat_level.png", gSurface);
+            pThreat -> SetClips();
+            pThreat -> SetXPos(700 + i*1200);
+            pThreat -> SetYPos(250);
+
+            listThreat.push_back(pThreat);
+        }
+    }
+
+    return listThreat;
+} 
  
 int main(int argc, char* argv[])
 {
@@ -94,6 +113,8 @@ int main(int argc, char* argv[])
     MainPlayer gPlayer;
     gPlayer.LoadImg("img/player_right.png", gSurface);
     gPlayer.SetClips();
+
+    std::vector<ThreatObject*> threatList = MakeThreatList();
     
     bool quit = false;
 
@@ -122,6 +143,15 @@ int main(int argc, char* argv[])
 
         mainMap.SetMap(mapData);
         mainMap.DrawMap(gSurface);
+
+        for (int i = 0; i < threatList.size(); i++) {
+            ThreatObject* pThreat = threatList[i];
+            if (pThreat != NULL) {
+                pThreat -> SetMapXY(mapData.startX, mapData.startY);
+                pThreat->DoThreat(mapData);
+                pThreat->Show(gSurface);
+            }
+        }
 
         SDL_RenderPresent(gSurface);
 
