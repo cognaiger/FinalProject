@@ -3,6 +3,7 @@
 
 #include"base.h"
 #include"BaseObject.h"
+#include"BulletObject.h"
 
 #define THREAT_FRAME_NUM 8
 #define THREAT_MAX_FALL_SPEED 10
@@ -46,6 +47,12 @@ public:
     void SetInputLeft(const int& ipLeft) { inputType.left = ipLeft; }
     void ImpMoveType(SDL_Renderer* screen);
 
+    std::vector<BulletObject*> GetBulletList() const { return bulletList; }
+    void SetBulletList(const std::vector<BulletObject*>& bulletList_) { bulletList = bulletList_; }
+
+    void InitBullet(BulletObject* pBullet, SDL_Renderer* screen);
+    void MakeBullet(SDL_Renderer* screen, const int& xLimit, const int& yLimit);
+
 private:
     // hold limit of map
     int mapX;
@@ -69,6 +76,8 @@ private:
     int animationB;
 
     Input inputType;
+
+    std::vector<BulletObject*> bulletList;
 };
 
 #endif

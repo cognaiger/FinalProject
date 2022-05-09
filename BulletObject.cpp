@@ -12,12 +12,14 @@ BulletObject::~BulletObject() {
 
 }
 
-void BulletObject::LoadImgBullet(SDL_Renderer* des) {
+bool BulletObject::LoadImgBullet(SDL_Renderer* des) {
+    bool ret = false;
     if (bulletType == LASER_BULLET) {
-        LoadImg("img/laser_bullet.png", des);
+        ret = LoadImg("img/laser_bullet.png", des);
     } else {
-        LoadImg("img/bullet.png", des);
+        ret = LoadImg("img/bullet.png", des);
     }
+    return ret;
 }
 
 void BulletObject::HandleMove(const int& xBorder, const int& yBorder) {

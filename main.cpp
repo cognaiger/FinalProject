@@ -108,6 +108,9 @@ std::vector<ThreatObject*> MakeThreatList() {
             pThreat -> SetXPos(700 + i*1200);
             pThreat -> SetYPos(250);
 
+            BulletObject* pBullet = new BulletObject();
+            pThreat -> InitBullet(pBullet, gSurface);
+
             listThreat.push_back(pThreat);
         }
     }
@@ -170,8 +173,9 @@ int main(int argc, char* argv[])
             if (pThreat != NULL) {
                 pThreat -> SetMapXY(mapData.startX, mapData.startY);
                 pThreat -> ImpMoveType(gSurface);
-                pThreat->DoThreat(mapData);
-                pThreat->Show(gSurface);
+                pThreat -> DoThreat(mapData);
+                pThreat -> MakeBullet(gSurface, WINDOW_WIDTH, WINDOW_HEIGHT);
+                pThreat -> Show(gSurface);
             }
         }
 
@@ -185,6 +189,15 @@ int main(int argc, char* argv[])
             SDL_Delay(delayTime);
         }
     }
+
+    for (int i = 0; i < threatList.size(); i++) {
+        ThreatObject* pThreat = threatList[i];
+        if (pThreat != NULL) {
+            pThreat -> free();
+            pThreat = NULL;
+        }
+    }
+    threatList.clear();
  
     close();
     return 0;

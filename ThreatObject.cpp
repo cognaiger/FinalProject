@@ -207,3 +207,40 @@ void ThreatObject::InitThreat() {
     yPos = 0;
     inputType.left = 1;
 }
+
+void ThreatObject::InitBullet(BulletObject *pBullet, SDL_Renderer *screen) {
+    if (pBullet != NULL) {
+        pBullet -> SetBulletType(BulletObject::LASER_BULLET);
+        bool ret = pBullet -> LoadImgBullet(screen);
+        
+        if (ret) {
+            pBullet -> SetIsMove(true);
+            pBullet -> SetBulletDir(BulletObject::DIR_LEFT);
+            pBullet -> SetRect(rect.x + 5, rect.y + 10);
+            pBullet -> SetXVal(15);
+            bulletList.push_back(pBullet);
+        }
+        
+    } 
+}
+
+void ThreatObject::MakeBullet(SDL_Renderer* screen, const int& xLimit, const int& yLimit) {
+    for (int i = 0; i < bulletList.size(); i++) {
+        BulletObject* pBullet = bulletList[i];
+        if (pBullet != NULL) {
+            if (pBullet -> GetIsMove()) {
+                int bulletDistance = widthFrame + rect.x - pBullet -> GetRect().x;
+                if (bulletDistance < 300) {
+                    pBullet -> HandleMove(xLimit, yLimit);
+                    pBullet -> Render(screen);
+                } else {
+                    pBullet -> SetIsMove(false);
+                }
+                
+            } else {
+                pBullet -> SetIsMove(true);
+                pBullet -> SetRect(rect.x + 5, rect.y + 10);
+            }
+        }
+    }
+}
