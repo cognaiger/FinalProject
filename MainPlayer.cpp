@@ -329,10 +329,22 @@ void MainPlayer::HandleBullet(SDL_Renderer* des) {
                 }
             }
         }
-
     }
 }
 
 void MainPlayer::IncreaseCoin() {
     coinCount++;
+}
+
+void MainPlayer::RemoveBullet(const int& idx) {
+    int size = pBulletList.size();
+    if (size > 0 && idx < size) {
+        BulletObject* pBullet = pBulletList[idx];
+        pBulletList.erase(pBulletList.begin() + idx);
+
+        if (pBullet) {
+            delete pBullet;
+            pBullet = NULL;
+        }
+    }
 }

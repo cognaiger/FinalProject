@@ -69,6 +69,8 @@ public:
 
     void HandleBullet(SDL_Renderer* des);
 
+    void RemoveBullet(const int& idx);
+
     void IncreaseCoin();
 private:
     int coinCount;

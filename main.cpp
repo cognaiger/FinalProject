@@ -179,6 +179,33 @@ int main(int argc, char* argv[])
             }
         }
 
+        std::vector<BulletObject*> bulletArr = gPlayer.GetBulletList();
+        for (int r = 0; r < bulletArr.size(); r++) {
+            BulletObject* pBullet = bulletArr[r];
+            if (pBullet != NULL) {
+                for (int t = 0; t < threatList.size(); t++) {
+                    ThreatObject* obThreat = threatList[t];
+                    if (obThreat != NULL) {
+                        SDL_Rect tRect;
+                        tRect.x = obThreat -> GetRect().x;
+                        tRect.y = obThreat -> GetRect().y;
+                        tRect.w = obThreat -> GetWidthFrame();
+                        tRect.h = obThreat -> GetHeightFrame();
+
+                        SDL_Rect bRect = pBullet -> GetRect();
+
+                        bool bCol = SDLBase::CheckCollision(bRect, tRect);
+
+                        if (bCol) {
+                            gPlayer.RemoveBullet(r);
+                            obThreat -> free();
+                            threatList.erase(threatList.begin() + t);
+                        }
+                    }
+                }
+            }
+        }
+
         SDL_RenderPresent(gSurface);
 
         int realImpTime = fpsTimer.GetTicks();

@@ -65,5 +65,9 @@ typedef struct Map {
     char* fileName;
 };
 
+namespace SDLBase {
+    bool CheckCollision(const SDL_Rect& object1, const SDL_Rect& object2);
+}
+
 
 #endif
