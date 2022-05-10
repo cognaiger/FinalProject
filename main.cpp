@@ -160,6 +160,10 @@ int main(int argc, char* argv[])
     expMain.SetClip();
 
 
+    // handle health of main player (> 3 -> die)
+    int numDie = 0;
+
+
     bool quit = false;
 
     // game loop
@@ -232,13 +236,20 @@ int main(int argc, char* argv[])
                         SDL_RenderPresent(gSurface);
                     }
                     
-                    /*if (MessageBox(NULL, _T("Game Over"), _T("Info"), MB_OK | MB_ICONSTOP) == IDOK) {
-                        pThreat -> free();
-                        close();
-                        SDL_Quit();
-                        return 0;
-                    }   
-                    */
+                    numDie++;
+                    if (numDie <= 3) {
+                        gPlayer.SetRect(0, 0);
+                        gPlayer.SetComebackTime(60);
+                        SDL_Delay(1000);
+                        continue;
+                    } else {
+                        if (MessageBox(NULL, _T("Game Over"), _T("Info"), MB_OK | MB_ICONSTOP) == IDOK) {
+                            pThreat -> free();
+                            close();
+                            SDL_Quit();
+                            return 0;
+                        }  
+                    }
                 }
             
             }

@@ -74,6 +74,8 @@ public:
     void RemoveBullet(const int& idx);
 
     void IncreaseCoin();
+
+    void SetComebackTime(const int& cbTime) { comeBackTime = cbTime; }
 private:
     int coinCount;
 
