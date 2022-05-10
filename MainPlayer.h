@@ -63,6 +63,8 @@ public:
     // (utility func)
     void UpdateImagePlayer(SDL_Renderer* des);
 
+    SDL_Rect GetRectFrame();
+
     void SetBulletList(std::vector<BulletObject*> bulletList) { pBulletList = bulletList; }
 
     std::vector<BulletObject*> GetBulletList() const { return pBulletList; }

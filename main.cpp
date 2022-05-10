@@ -75,6 +75,10 @@ bool loadBackground() {
     return true;
 }
 
+/*
+create 20 static threats and 20 dynamic threats and set up
+return 'listThreat' 
+*/
 std::vector<ThreatObject*> MakeThreatList() {
     std::vector<ThreatObject*> listThreat;
 
@@ -86,7 +90,7 @@ std::vector<ThreatObject*> MakeThreatList() {
             pThreat -> SetClips();
             pThreat -> SetTypeMove(ThreatObject::MOVE_IN_SPACE_THREAT);
             pThreat -> SetInputLeft(1);
-            pThreat -> SetXPos(500 + i*500);
+            pThreat -> SetXPos(500 + i*700);
             pThreat -> SetYPos(250);
 
             int pos1 = pThreat -> GetXPos() - 60;
@@ -176,6 +180,35 @@ int main(int argc, char* argv[])
                 pThreat -> DoThreat(mapData);
                 pThreat -> MakeBullet(gSurface, WINDOW_WIDTH, WINDOW_HEIGHT);
                 pThreat -> Show(gSurface);
+
+                SDL_Rect rectPlayer = gPlayer.GetRectFrame();
+                bool bCol1 = false;
+                std::vector<BulletObject*> tBulletList = pThreat -> GetBulletList();
+                for (int jj = 0; jj < tBulletList.size(); jj++) {
+                    BulletObject* ptBullet = tBulletList[jj];
+                    if (ptBullet != NULL) {
+                        bCol1 = SDLBase::CheckCollision(ptBullet -> GetRect(), rectPlayer) && 
+                                ptBullet -> GetIsMove();
+                        if (bCol1) {
+                            pThreat -> RemoveBullet(jj);
+                            break;
+                        }
+                    }
+                }
+
+                SDL_Rect RectThreat = pThreat -> GetRectFrame();
+                bool bCol2 = SDLBase::CheckCollision(rectPlayer, RectThreat);
+
+        
+
+                if (bCol1 || bCol2) {
+                    if (MessageBox(NULL, _T("Game Over"), _T("Info"), MB_OK | MB_ICONSTOP) == IDOK) {
+                        pThreat -> free();
+                        close();
+                        SDL_Quit();
+                        return 0;
+                    }   
+                }
             }
         }
 
@@ -215,8 +248,10 @@ int main(int argc, char* argv[])
             int delayTime = timeOneFrame - realImpTime;
             SDL_Delay(delayTime);
         }
-    }
+    }         // end game loop
 
+
+    // free threat
     for (int i = 0; i < threatList.size(); i++) {
         ThreatObject* pThreat = threatList[i];
         if (pThreat != NULL) {
@@ -225,7 +260,8 @@ int main(int argc, char* argv[])
         }
     }
     threatList.clear();
- 
+
+    // end program
     close();
     return 0;
 }

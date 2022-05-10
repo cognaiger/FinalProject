@@ -348,3 +348,12 @@ void MainPlayer::RemoveBullet(const int& idx) {
         }
     }
 }
+
+SDL_Rect MainPlayer::GetRectFrame() {
+    SDL_Rect rect_;
+    rect_.x = rect.x;
+    rect_.y = rect.y;
+    rect_.w = widthFrame;
+    rect_.h = heightFrame; 
+    return rect_;
+}

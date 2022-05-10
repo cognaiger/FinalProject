@@ -244,3 +244,25 @@ void ThreatObject::MakeBullet(SDL_Renderer* screen, const int& xLimit, const int
         }
     }
 }
+
+void ThreatObject::RemoveBullet(const int& idx) {
+    int size = bulletList.size();
+    if (size > 0 && idx < size) {
+        BulletObject* pBullet = bulletList[idx];
+        bulletList.erase(bulletList.begin() + idx);
+
+        if (pBullet) {
+            delete pBullet;
+            pBullet = NULL;
+        }
+    }
+}
+
+SDL_Rect ThreatObject::GetRectFrame() {
+    SDL_Rect rect_;
+    rect_.x = rect.x;
+    rect_.y = rect.y;
+    rect_.w = widthFrame;
+    rect_.h = heightFrame; 
+    return rect_;
+}
