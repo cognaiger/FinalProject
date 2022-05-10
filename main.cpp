@@ -4,6 +4,7 @@
 #include"MainPlayer.h"
 #include"Timer.h"
 #include"ThreatObject.h"
+#include"ExplosionObject.h"
 
 // set up window and renderer
 bool init();
@@ -142,8 +143,23 @@ int main(int argc, char* argv[])
     gPlayer.LoadImg("img/player_right.png", gSurface);
     gPlayer.SetClips();
 
+
     std::vector<ThreatObject*> threatList = MakeThreatList();
     
+    ExplosionObject expThreat;
+    bool tRet = expThreat.LoadImg("img/exp3.png", gSurface);
+    if (tRet == false) {
+        return -1;
+    }
+    expThreat.SetClip();
+
+    ExplosionObject expMain;
+    bool pRet = expMain.LoadImg("img/exp3.png", gSurface);
+    if (pRet == false) 
+        return -1;
+    expMain.SetClip();
+
+
     bool quit = false;
 
     // game loop
@@ -202,15 +218,35 @@ int main(int argc, char* argv[])
         
 
                 if (bCol1 || bCol2) {
-                    if (MessageBox(NULL, _T("Game Over"), _T("Info"), MB_OK | MB_ICONSTOP) == IDOK) {
+                    int widthExpFrame = expMain.GetFrameWidth();
+                    int heightExpFrame = expMain.GetFrameHeight();
+                    for (int i = 0; i < NUM_FRAME_EX; i++) {
+                        int xPos = (gPlayer.GetRectFrame().x + gPlayer.GetRectFrame().w * 0.5)
+                                  - widthExpFrame*0.5;
+                        int yPos = (gPlayer.GetRectFrame().y + gPlayer.GetRectFrame().h * 0.5)
+                                    - heightExpFrame*0.5;
+                        
+                        expMain.SetFrame(i);
+                        expMain.SetRect(xPos, yPos);
+                        expMain.Show(gSurface);
+                        SDL_RenderPresent(gSurface);
+                    }
+                    
+                    /*if (MessageBox(NULL, _T("Game Over"), _T("Info"), MB_OK | MB_ICONSTOP) == IDOK) {
                         pThreat -> free();
                         close();
                         SDL_Quit();
                         return 0;
                     }   
+                    */
                 }
+            
             }
         }
+
+
+        int frameExpWidth = expThreat.GetFrameWidth();
+        int frameExpHeight = expThreat.GetFrameHeight();
 
         std::vector<BulletObject*> bulletArr = gPlayer.GetBulletList();
         for (int r = 0; r < bulletArr.size(); r++) {
@@ -230,6 +266,15 @@ int main(int argc, char* argv[])
                         bool bCol = SDLBase::CheckCollision(bRect, tRect);
 
                         if (bCol) {
+                            for (int ex = 0; ex < NUM_FRAME_EX; ex++) {
+                                int xPos = pBullet -> GetRect().x - 0.5*frameExpWidth;
+                                int yPos = pBullet -> GetRect().y - 0.5*frameExpHeight;
+
+                                expThreat.SetFrame(ex);
+                                expThreat.SetRect(xPos, yPos);
+                                expThreat.Show(gSurface);
+                            }
+
                             gPlayer.RemoveBullet(r);
                             obThreat -> free();
                             threatList.erase(threatList.begin() + t);
