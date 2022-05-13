@@ -6,6 +6,7 @@
 #include"ThreatObject.h"
 #include"ExplosionObject.h"
 #include"TextObject.h"
+#include"PlayerPower.h"
 
 BaseObject gBackground;
 TTF_Font* fontTime;
@@ -152,9 +153,19 @@ int main(int argc, char* argv[])
     mainMap.LoadTiles(gSurface);
     Map mapData = mainMap.GetMap();
 
+
     MainPlayer gPlayer;
     gPlayer.LoadImg("img/player_right.png", gSurface);
     gPlayer.SetClips();
+
+
+    PlayerPower playerPow;
+    playerPow.Init(gSurface);
+
+
+    PlayerMoney playerMon;
+    playerMon.Init(gSurface);
+    playerMon.SetPos(WINDOW_WIDTH*0.5 - 300, 8);
 
 
     std::vector<ThreatObject*> threatList = MakeThreatList();
@@ -217,6 +228,9 @@ int main(int argc, char* argv[])
         mainMap.SetMap(mapData);
         mainMap.DrawMap(gSurface);
 
+        playerPow.Show(gSurface);
+        playerMon.Show(gSurface);
+
         for (int i = 0; i < threatList.size(); i++) {
             ThreatObject* pThreat = threatList[i];
             if (pThreat != NULL) {
@@ -266,6 +280,8 @@ int main(int argc, char* argv[])
                         gPlayer.SetRect(0, 0);
                         gPlayer.SetComebackTime(60);
                         SDL_Delay(1000);
+                        playerPow.Decrease();
+                        playerPow.Render(gSurface);
                         continue;
                     } else {
                         if (MessageBox(NULL, _T("Game Over"), _T("Info"), MB_OK | MB_ICONSTOP) == IDOK) {
