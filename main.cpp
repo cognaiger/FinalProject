@@ -8,6 +8,7 @@
 #include"TextObject.h"
 #include"PlayerPower.h"
 #include"Geometric.h"
+#include"BossObject.h"
 
 BaseObject gBackground;
 TTF_Font* fontTime;
@@ -170,6 +171,17 @@ int main(int argc, char* argv[])
 
 
     std::vector<ThreatObject*> threatList = MakeThreatList();
+
+
+    // boss threat
+    BossObject boss;
+    bool ret = boss.LoadImg("img/boss_object.png", gSurface);
+    boss.SetClips();
+    int xPosBoss = MAX_MAP_X * TILE_SIZE - WINDOW_WIDTH * 0.6;
+    boss.SetXPos(xPosBoss);
+    boss.SetYPos(10);
+
+
     
     ExplosionObject expThreat;
     bool tRet = expThreat.LoadImg("img/exp3.png", gSurface);
@@ -383,6 +395,18 @@ int main(int argc, char* argv[])
         moneyGame.SetText(moneyStr);
         moneyGame.LoadFromRenderText(fontTime, gSurface);
         moneyGame.RenderText(gSurface, WINDOW_WIDTH*0.5 - 250, 15);
+
+        
+        // Show boss
+        int val = MAX_MAP_X*TILE_SIZE - (mapData.startX + gPlayer.GetRect().x);
+        if (val <= WINDOW_WIDTH) {
+            boss.SetMapXY(mapData.startX, mapData.startY);
+            boss.DoPlayer(mapData);
+            boss.MakeBullet(gSurface, WINDOW_WIDTH, WINDOW_HEIGHT);
+            boss.Show(gSurface);
+        }
+        
+
 
         SDL_RenderPresent(gSurface);
 
