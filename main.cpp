@@ -5,6 +5,11 @@
 #include"Timer.h"
 #include"ThreatObject.h"
 #include"ExplosionObject.h"
+#include"TextObject.h"
+
+BaseObject gBackground;
+TTF_Font* fontTime;
+
 
 // set up window and renderer
 bool init();
@@ -14,8 +19,6 @@ bool loadBackground();
 
 // shut up everything
 void close();
-
-BaseObject gBackground;
 
 // set up window and renderer
 bool init()
@@ -41,6 +44,16 @@ bool init()
                 if ( !(IMG_Init(imgFlags) && imgFlags) ) 
                     success = false;
             }
+
+            if (TTF_Init() == -1) {
+                success = false;
+            } else {
+                fontTime = TTF_OpenFont("font/dlxfont_.ttf", 15);
+                if (fontTime == NULL) {
+                    success = false;
+                }
+            }
+
         } else 
         {
             std::cout << "Can't create window! SDL error: " << SDL_GetError() << std::endl;
@@ -162,6 +175,11 @@ int main(int argc, char* argv[])
 
     // handle health of main player (> 3 -> die)
     int numDie = 0;
+
+
+    // time text
+    TextObject timeGame;
+    timeGame.SetColor(TextObject::WHITE_TEXT);
 
 
     bool quit = false;
@@ -293,6 +311,24 @@ int main(int argc, char* argv[])
                     }
                 }
             }
+        }
+
+        // Show game time
+        std::string strTime = "Time: ";
+        Uint32 timeVal = SDL_GetTicks() / 1000;
+        Uint32 valTime = 300 - timeVal;
+        if (valTime < 0) {
+            if (MessageBox(NULL, _T("Game Over"), _T("Info"), MB_OK | MB_ICONSTOP) == IDOK) {
+                quit = true;
+                break;
+            }
+        } else {
+            std::string strVal = std::to_string(valTime);
+            strTime += strVal;
+
+            timeGame.SetText(strTime);
+            timeGame.LoadFromRenderText(fontTime, gSurface);
+            timeGame.RenderText(gSurface, WINDOW_WIDTH - 200, 15);
         }
 
         SDL_RenderPresent(gSurface);

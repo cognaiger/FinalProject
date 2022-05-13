@@ -9,6 +9,7 @@
 
 #include"SDL2/SDL.h"
 #include"SDL2/SDL_image.h"
+#include"SDL2/SDL_ttf.h"
 
 // declare all static variable
 static SDL_Window* gWindow = NULL;
