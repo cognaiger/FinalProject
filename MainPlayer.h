@@ -76,6 +76,8 @@ public:
     void IncreaseCoin();
 
     void SetComebackTime(const int& cbTime) { comeBackTime = cbTime; }
+
+    int GetCointCount() const { return coinCount; }
 private:
     int coinCount;
 

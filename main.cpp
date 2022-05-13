@@ -181,6 +181,13 @@ int main(int argc, char* argv[])
     TextObject timeGame;
     timeGame.SetColor(TextObject::WHITE_TEXT);
 
+    TextObject markGame;
+    markGame.SetColor(TextObject::WHITE_TEXT);
+    UINT markValue = 0;
+
+    TextObject moneyGame;
+    moneyGame.SetColor(TextObject::BLACK_TEXT);
+
 
     bool quit = false;
 
@@ -277,6 +284,8 @@ int main(int argc, char* argv[])
         int frameExpWidth = expThreat.GetFrameWidth();
         int frameExpHeight = expThreat.GetFrameHeight();
 
+
+        // handle bullet of main player
         std::vector<BulletObject*> bulletArr = gPlayer.GetBulletList();
         for (int r = 0; r < bulletArr.size(); r++) {
             BulletObject* pBullet = bulletArr[r];
@@ -295,6 +304,7 @@ int main(int argc, char* argv[])
                         bool bCol = SDLBase::CheckCollision(bRect, tRect);
 
                         if (bCol) {
+                            markValue++;
                             for (int ex = 0; ex < NUM_FRAME_EX; ex++) {
                                 int xPos = pBullet -> GetRect().x - 0.5*frameExpWidth;
                                 int yPos = pBullet -> GetRect().y - 0.5*frameExpHeight;
@@ -330,6 +340,20 @@ int main(int argc, char* argv[])
             timeGame.LoadFromRenderText(fontTime, gSurface);
             timeGame.RenderText(gSurface, WINDOW_WIDTH - 200, 15);
         }
+
+        std::string valStrMark = std::to_string(markValue);
+        std::string strMark = "Mark: ";
+        strMark += valStrMark;
+
+        markGame.SetText(strMark);
+        markGame.LoadFromRenderText(fontTime, gSurface);
+        markGame.RenderText(gSurface, WINDOW_WIDTH*0.5 - 50, 15);
+
+        int coinCount = gPlayer.GetCointCount();
+        std::string moneyStr = std::to_string(coinCount);
+        moneyGame.SetText(moneyStr);
+        moneyGame.LoadFromRenderText(fontTime, gSurface);
+        moneyGame.RenderText(gSurface, WINDOW_WIDTH*0.5 - 250, 15);
 
         SDL_RenderPresent(gSurface);
 
