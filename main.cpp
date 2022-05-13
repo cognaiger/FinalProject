@@ -7,6 +7,7 @@
 #include"ExplosionObject.h"
 #include"TextObject.h"
 #include"PlayerPower.h"
+#include"Geometric.h"
 
 BaseObject gBackground;
 TTF_Font* fontTime;
@@ -227,6 +228,18 @@ int main(int argc, char* argv[])
 
         mainMap.SetMap(mapData);
         mainMap.DrawMap(gSurface);
+
+
+        // draw geometric
+        GeometricFormat rectSize(0, 0, WINDOW_WIDTH, 40);
+        ColorData colorData1(36, 36, 36);
+        Geometric::RenderRectangle(rectSize, colorData1, gSurface);
+
+        GeometricFormat outLine(1, 1, WINDOW_WIDTH - 1, 38);
+        ColorData colorData2(255, 255, 255);
+
+        Geometric::RenderOutline(outLine, colorData2, gSurface);
+
 
         playerPow.Show(gSurface);
         playerMon.Show(gSurface);
