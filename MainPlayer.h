@@ -5,6 +5,7 @@
 #include"base.h"
 #include"BaseObject.h"
 #include"BulletObject.h"
+#include"GameMap.h"
 
 # define FRAME_NUM 8
 # define GRAVITY_SPEED 0.8

@@ -4,6 +4,7 @@
 #include"base.h"
 #include"BaseObject.h"
 #include"BulletObject.h"
+#include"GameMap.h"
 
 #define THREAT_FRAME_NUM 8
 #define THREAT_MAX_FALL_SPEED 10

@@ -86,7 +86,7 @@ void close()
  
 
 bool loadBackground() {
-    bool ret = gBackground.LoadImg("img/background.png", gSurface);
+    bool ret = gBackground.LoadImg("img/bg_jungle.png", gSurface);
     if (ret == false) 
         return false;
     return true;

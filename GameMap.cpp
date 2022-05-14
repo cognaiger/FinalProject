@@ -1,5 +1,6 @@
 #include"GameMap.h"
 
+
 void GameMap::LoadMap(char* path) {
     FILE* fp = NULL;
     fopen_s(&fp, path, "rb");
@@ -34,11 +35,12 @@ void GameMap::LoadMap(char* path) {
     fclose(fp);
 }
 
+
 void GameMap::LoadTiles(SDL_Renderer* screen) {
     char fileImage[30];
     FILE* fp = NULL;
 
-    for (int i = 0; i < 10; i++) {
+    for (int i = 0; i < 12; i++) {
         sprintf_s(fileImage, "map/%d.png", i);
 
         fopen_s(&fp, fileImage, "rb");
@@ -50,6 +52,7 @@ void GameMap::LoadTiles(SDL_Renderer* screen) {
         tileMat[i].LoadImg(fileImage, screen);
     }
 }
+
 
 void GameMap::DrawMap(SDL_Renderer* screen) {
     // coordinate we begin to render tile

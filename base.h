@@ -49,24 +49,6 @@ typedef struct Input {
     int jump;
 };
 
-// chunk of information about main map
-typedef struct Map {
-    // X-coordinate that map begin (pixel)
-    int startX;
-    // Y-coordinate that map begin (pixel)
-    int startY;
-
-    // max X-coordinate (pixel)
-    int maxX;
-    // max Y-coordinate (pixel)
-    int maxY;
-
-    // array that contain text-map
-    int tile[MAX_MAP_Y][MAX_MAP_X];
-
-    // point to location of file text-map
-    char* fileName;
-};
 
 namespace SDLBase {
     bool CheckCollision(const SDL_Rect& object1, const SDL_Rect& object2);

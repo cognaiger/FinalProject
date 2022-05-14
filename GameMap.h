@@ -1,12 +1,37 @@
+
+
 #ifndef GAMEMAP_H
 #define GAMEMAP_H
+
 
 #include"base.h"
 #include"BaseObject.h"
 
+
 #define MAX_TILES 20
 
-// class that represent tile of map 
+
+// chunk of information about main map
+typedef struct Map {
+    // X-coordinate that map begin (pixel)
+    int startX;
+    // Y-coordinate that map begin (pixel)
+    int startY;
+
+    // max X-coordinate (pixel)
+    int maxX;
+    // max Y-coordinate (pixel)
+    int maxY;
+
+    // array that contain text-map
+    int tile[MAX_MAP_Y][MAX_MAP_X];
+
+    // point to location of file text-map
+    char* fileName;
+};
+
+
+// represent tile map 
 class TileMat : public BaseObject
 {
 public:
@@ -14,7 +39,7 @@ public:
     ~TileMat() {;}
 };
 
-// class that represent main map of the game
+// represent map of the game
 class GameMap {
 public: 
     GameMap() {;}
