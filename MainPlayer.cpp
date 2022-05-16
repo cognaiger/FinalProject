@@ -28,7 +28,7 @@ MainPlayer::~MainPlayer() {
 bool MainPlayer::LoadImg(std::string path, SDL_Renderer* screen) {
     bool ret = BaseObject::LoadImg(path, screen);
     if (ret == true) {
-        widthFrame = rect.w/8;
+        widthFrame = rect.w/FRAME_NUM;
         heightFrame = rect.h;
     }
     return ret;
@@ -76,12 +76,12 @@ void MainPlayer::HandleInput(SDL_Event events, SDL_Renderer* screen) {
     {
         switch (events.key.keysym.sym)
         {
-        case SDLK_RIGHT:
+        case SDLK_RIGHT:           // left arrow
             status = WALK_RIGHT;
             inputType.right = 1;
             inputType.left = 0;
             break;
-        case SDLK_LEFT:
+        case SDLK_LEFT:            // right arrow
             status = WALK_LEFT;
             inputType.left = 1;
             inputType.right = 0;
@@ -104,7 +104,8 @@ void MainPlayer::HandleInput(SDL_Event events, SDL_Renderer* screen) {
     {
         if (events.button.button == SDL_BUTTON_RIGHT) {
             inputType.jump = 1;
-        } else if (events.button.button == SDL_BUTTON_LEFT) {
+        } else if (events.button.button == SDL_BUTTON_LEFT) // shoot
+        {
             BulletObject* pBullet = new BulletObject();
             pBullet -> SetBulletType(BulletObject::LASER_BULLET);
             pBullet -> LoadImgBullet(screen);
@@ -322,11 +323,7 @@ void MainPlayer::HandleBullet(SDL_Renderer* des) {
                 pBullet -> Render(des);
             }
             else {
-                pBulletList.erase(pBulletList.begin() + i);
-                if (pBullet != NULL) {
-                    delete pBullet;
-                    pBullet = NULL;
-                }
+                RemoveBullet(i);
             }
         }
     }

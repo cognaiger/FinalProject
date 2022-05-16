@@ -42,11 +42,15 @@ public:
     void SetBulletType(const unsigned int& bulletType_) { bulletType = bulletType_; }
     unsigned int GetBulletType() const { return bulletType; }
 
+    // decide where bullet is not move
     void HandleMove(const int& xBorder, const int& yBorder);
     bool LoadImgBullet(SDL_Renderer* des);
 private:
+    // horizontal velocity of bullet 
     int xVal;
+    // vertical velocity of bullet
     int yVal;
+    // validation of bullet
     bool isMove;
     unsigned int bulletDir;
     unsigned int bulletType;

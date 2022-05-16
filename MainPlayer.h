@@ -35,7 +35,7 @@ public:
     */
     void Show(SDL_Renderer* des);
 
-    // base on key press action to modify 'inputType' and 'status'
+    // base on input action to modify 'inputType' and 'status'
     void HandleInput(SDL_Event events, SDL_Renderer* screen);
     
     // create info about frame-rect on big picture
@@ -64,14 +64,17 @@ public:
     // (utility func)
     void UpdateImagePlayer(SDL_Renderer* des);
 
+    // get rect of one frame of player
     SDL_Rect GetRectFrame();
 
     void SetBulletList(std::vector<BulletObject*> bulletList) { pBulletList = bulletList; }
 
     std::vector<BulletObject*> GetBulletList() const { return pBulletList; }
 
+    // base on status of bullet in bulletList to render bullet image player shoot
     void HandleBullet(SDL_Renderer* des);
 
+    // clean bullet in bulletList of player base on index
     void RemoveBullet(const int& idx);
 
     void IncreaseCoin();

@@ -156,9 +156,11 @@ int main(int argc, char* argv[])
     Map mapData = mainMap.GetMap();
 
 
+    // player
     MainPlayer gPlayer;
     gPlayer.LoadImg("img/player_right.png", gSurface);
     gPlayer.SetClips();
+
 
 
     PlayerPower playerPow;
