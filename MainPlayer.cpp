@@ -202,7 +202,7 @@ void MainPlayer::CheckToMap(Map& mapData) {
     x1 = (xPos + xVal)/TILE_SIZE;
     x2 = (xPos + xVal + widthFrame)/TILE_SIZE;
 
-    y1 = (yPos)/TILE_SIZE;
+    y1 = (yPos + 1)/TILE_SIZE;
     y2 = (yPos + heightMin - 1)/TILE_SIZE;
 
     if (x1 >= 0 && x2 < MAX_MAP_X && y1 >= 0 && y2 < MAX_MAP_Y)       // valid pos in map limit
@@ -216,7 +216,9 @@ void MainPlayer::CheckToMap(Map& mapData) {
                 mapData.tile[y1][x2] = 0;
                 mapData.tile[y2][x2] = 0;
                 IncreaseCoin();
-            } else if (val1 != BLANK_TILE || val2 != BLANK_TILE) {
+            } else if ((val1 != BLANK_TILE && val1 != SMALL_TREE && val1 != BIG_TREE)
+                    || (val2 != BLANK_TILE && val2 != SMALL_TREE && val2 != BIG_TREE))
+            {
                 xPos = x2 * TILE_SIZE;
                 xPos -= (widthFrame + 1);
                 xVal = 0;
@@ -230,7 +232,8 @@ void MainPlayer::CheckToMap(Map& mapData) {
                 mapData.tile[y1][x1] = 0;
                 mapData.tile[y2][x1] = 0;
                 IncreaseCoin();
-            } else if (val1 != BLANK_TILE || val2 != BLANK_TILE)
+            } else if ((val1 != BLANK_TILE && val1 != SMALL_TREE && val1 != BIG_TREE)
+                    || (val2 != BLANK_TILE && val2 != SMALL_TREE && val2 != BIG_TREE))
             {
                 xPos = (x1 + 1) * TILE_SIZE;
                 xVal = 0;
@@ -244,19 +247,21 @@ void MainPlayer::CheckToMap(Map& mapData) {
     x1 = xPos/TILE_SIZE;
     x2 = (xPos + widthMin)/TILE_SIZE;
 
+    // int cur = (yPos + 1)/TILE_SIZE;
     y1 = (yPos + yVal)/TILE_SIZE;
     y2 = (yPos + yVal + heightFrame - 1)/TILE_SIZE;
 
     if (x1 >= 0 && x2 < MAX_MAP_X && y1 >= 0 && y2 < MAX_MAP_Y) 
     {
-        if (yVal > 0) {
+        if (yVal > 0) {               // move downward
             int val1 = mapData.tile[y2][x1];
             int val2 = mapData.tile[y2][x2];
             if (val1 == COIN_TILE || val2 == COIN_TILE) {
                 mapData.tile[y2][x1] = 0;
                 mapData.tile[y2][x2] = 0;
                 IncreaseCoin();
-            } else if (val1 != BLANK_TILE || val2 != BLANK_TILE)
+            } else if ((val1 != BLANK_TILE && val1 != SMALL_TREE && val1 != BIG_TREE)
+                    || (val2 != BLANK_TILE && val2 != SMALL_TREE && val2 != BIG_TREE))
             {
                 yPos = y2*TILE_SIZE;
                 yPos -= (heightFrame + 1);
@@ -267,7 +272,7 @@ void MainPlayer::CheckToMap(Map& mapData) {
                     status = WALK_RIGHT;
                 }
             }
-        } else if (yVal < 0) {
+        } else if (yVal < 0) {       // move upward
             int val1 = mapData.tile[y2][x1];
             int val2 = mapData.tile[y2][x2];
 
@@ -275,9 +280,10 @@ void MainPlayer::CheckToMap(Map& mapData) {
                 mapData.tile[y2][x1] = 0;
                 mapData.tile[y2][x2] = 0;
                 IncreaseCoin();
-            } else if (val1 != BLANK_TILE || val2 != BLANK_TILE)
+            } else if ((val1 != BLANK_TILE && val1 != SMALL_TREE && val1 != BIG_TREE)
+                    || (val2 != BLANK_TILE && val2 != SMALL_TREE && val2 != BIG_TREE))
             {
-                yPos = (y1 + 1)*TILE_SIZE;
+                yPos = (y2 + 1)*TILE_SIZE;
                 yVal = 0;
             }
         }

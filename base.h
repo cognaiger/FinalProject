@@ -35,6 +35,8 @@ const int RENDER_DRAW_COLOR = 255;
 #define TILE_SIZE 64
 #define BLANK_TILE 0
 #define COIN_TILE 4
+#define SMALL_TREE 9
+#define BIG_TREE 8
 
 // divide map into 400x10 grid
 #define MAX_MAP_X 400

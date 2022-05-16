@@ -64,9 +64,10 @@ public:
     // (utility func)
     void UpdateImagePlayer(SDL_Renderer* des);
 
-    // get rect of one frame of player
+    // get rect of player (one frame)
     SDL_Rect GetRectFrame();
 
+    // set bulletList = parameter
     void SetBulletList(std::vector<BulletObject*> bulletList) { pBulletList = bulletList; }
 
     std::vector<BulletObject*> GetBulletList() const { return pBulletList; }
@@ -77,14 +78,18 @@ public:
     // clean bullet in bulletList of player base on index
     void RemoveBullet(const int& idx);
 
+    // increase coin by 1
     void IncreaseCoin();
 
+    // set comeBackTime = parameter
     void SetComebackTime(const int& cbTime) { comeBackTime = cbTime; }
 
+    // get coinCount
     int GetCointCount() const { return coinCount; }
 private:
+    // count coin
     int coinCount;
-
+    // manage bullet present
     std::vector<BulletObject*> pBulletList;
 
     // distance player will move horizontally
@@ -97,7 +102,9 @@ private:
     // hold vertical position
     float yPos;
 
+    // width of one frame
     int widthFrame;
+    // height of one frame
     int heightFrame;
 
     SDL_Rect frameCLip[FRAME_NUM];
@@ -111,12 +118,14 @@ private:
     // show player is runing left or right
     int status;
 
+    // player is on ground or on air
     bool onGround;
 
     // hold coordinate of place starting new map
     int mapX;
     int mapY;
 
+    // time player come back after die
     int comeBackTime;
 };
 
