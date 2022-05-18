@@ -30,7 +30,7 @@ bool init()
     if( SDL_Init( SDL_INIT_VIDEO ) >= 0 )
     {
         SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "1");
-        gWindow = SDL_CreateWindow( "SDL Tutorial", SDL_WINDOWPOS_UNDEFINED,
+        gWindow = SDL_CreateWindow( "Shooter", SDL_WINDOWPOS_UNDEFINED,
         SDL_WINDOWPOS_UNDEFINED, WINDOW_WIDTH, WINDOW_HEIGHT, SDL_WINDOW_SHOWN );
         if( gWindow != NULL )
         {
@@ -214,8 +214,14 @@ int main(int argc, char* argv[])
     TextObject moneyGame;
     moneyGame.SetColor(TextObject::BLACK_TEXT);
 
-
     bool quit = false;
+
+
+    int retMenu = Menu::ShowMenu(gSurface, fontTime);
+    if (retMenu == 1) {
+        quit = true;
+    }
+
 
     // game loop
     while (!quit) {
@@ -381,7 +387,8 @@ int main(int argc, char* argv[])
 
             timeGame.SetText(strTime);
             timeGame.LoadFromRenderText(fontTime, gSurface);
-            timeGame.RenderText(gSurface, WINDOW_WIDTH - 200, 15);
+            timeGame.SetRect(WINDOW_WIDTH - 200, 15);
+            timeGame.RenderText(gSurface);
         }
 
         std::string valStrMark = std::to_string(markValue);
@@ -390,13 +397,15 @@ int main(int argc, char* argv[])
 
         markGame.SetText(strMark);
         markGame.LoadFromRenderText(fontTime, gSurface);
-        markGame.RenderText(gSurface, WINDOW_WIDTH*0.5 - 50, 15);
+        markGame.SetRect(WINDOW_WIDTH*0.5 - 50, 15);
+        markGame.RenderText(gSurface);
 
         int coinCount = gPlayer.GetCointCount();
         std::string moneyStr = std::to_string(coinCount);
         moneyGame.SetText(moneyStr);
         moneyGame.LoadFromRenderText(fontTime, gSurface);
-        moneyGame.RenderText(gSurface, WINDOW_WIDTH*0.5 - 250, 15);
+        moneyGame.SetRect(WINDOW_WIDTH*0.5 - 250, 15);
+        moneyGame.RenderText(gSurface);
 
         
         // Show boss

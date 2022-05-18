@@ -32,4 +32,7 @@ protected:
     SDL_Rect rect;
 };
 
+
+
+
 #endif

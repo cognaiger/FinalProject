@@ -2,6 +2,9 @@
 #define TEXT_OBJECT_H
 
 #include"base.h"
+#include"BaseObject.h"
+
+
 
 class TextObject
 {
@@ -22,23 +25,30 @@ public:
     void SetColor(Uint8 red, Uint8 green, Uint8 blue);
     void SetColor(int type);
 
-    void RenderText(SDL_Renderer* screen, int xp, int yp, SDL_Rect* clip = NULL, 
+    void RenderText(SDL_Renderer* screen, SDL_Rect* clip = NULL, 
                     double angle = 0.0, SDL_Point* center = NULL, 
                     SDL_RendererFlip flip = SDL_FLIP_NONE);
 
-    int GetWidth() const { return width; }
-    int GetHeight() const { return height; }
+    int GetWidth() const { return rect.w; }
+    int GetHeight() const { return rect.h; }
 
     void SetText(const std::string text) { strVal = text; }
     std::string GetText() const { return strVal; }
+    void SetRect(const int& xp, const int& yp) { rect.x = xp, rect.y = yp; }
+    SDL_Rect GetRect() const { return rect; }
 
 private:
     std::string strVal;
     SDL_Color textColor;
     SDL_Texture* texture;
-    int width;
-    int height;
+    SDL_Rect rect;
 };
+
+
+namespace Menu {
+    // handle menu
+    int ShowMenu(SDL_Renderer* des, TTF_Font* font);
+}
 
 
 #endif

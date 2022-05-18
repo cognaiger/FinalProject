@@ -54,6 +54,8 @@ typedef struct Input {
 
 namespace SDLBase {
     bool CheckCollision(const SDL_Rect& object1, const SDL_Rect& object2);
+    void ApplySurface(SDL_Surface* src, SDL_Renderer* des, int x, int y);
+    bool CheckFocusWithRect(const int& x, const int& y, const SDL_Rect& rect);
 }
 
 
