@@ -71,7 +71,7 @@ void MainPlayer::Show(SDL_Renderer* des) {
     }
 }
 
-void MainPlayer::HandleInput(SDL_Event events, SDL_Renderer* screen) {
+void MainPlayer::HandleInput(SDL_Event events, Mix_Chunk* bulletSound[3], SDL_Renderer* screen) {
     if (events.type == SDL_KEYDOWN) 
     {
         switch (events.key.keysym.sym)
@@ -109,6 +109,7 @@ void MainPlayer::HandleInput(SDL_Event events, SDL_Renderer* screen) {
             BulletObject* pBullet = new BulletObject();
             pBullet -> SetBulletType(BulletObject::LASER_BULLET);
             pBullet -> LoadImgBullet(screen);
+            int ret = Mix_PlayChannel(-1, bulletSound[0], 0);
 
             if (status == WALK_LEFT) {
                 pBullet -> SetBulletDir(BulletObject::DIR_LEFT);

@@ -56,6 +56,25 @@ bool init()
                     success = false;
                 }
             }
+            
+            // init audio
+            const char soundBullet1[] = "sound/gunShot.wav";
+            const char soundBullet2[] = "sound/gunShot2.wav";
+            const char soundExplosion[] = "sound/Explosion.wav";
+            const char soundExMain[] = "sound/exMain.wav"; 
+            if (Mix_OpenAudio(22050, MIX_DEFAULT_FORMAT, 2, 4096) != 0) {
+                return false;
+            } else {
+                gSoundBullet[0] = Mix_LoadWAV(soundBullet1);
+                gSoundBullet[1] = Mix_LoadWAV(soundBullet2);
+                gSoundExplosion = Mix_LoadWAV(soundExplosion);
+                gSoundExMain = Mix_LoadWAV(soundExMain);
+
+                if (gSoundBullet[0] == NULL || gSoundBullet[1] == NULL 
+                    || gSoundExplosion == NULL || gSoundExMain == NULL) {
+                        return false;
+                    }
+            }
 
         } else 
         {
@@ -232,7 +251,7 @@ int main(int argc, char* argv[])
                 quit = true;
             }
 
-            gPlayer.HandleInput(gEvent, gSurface);
+            gPlayer.HandleInput(gEvent, gSoundBullet, gSurface);
         }
 
         SDL_SetRenderDrawColor(gSurface, RENDER_DRAW_COLOR,
@@ -307,6 +326,9 @@ int main(int argc, char* argv[])
                         expMain.Show(gSurface);
                         SDL_RenderPresent(gSurface);
                     }
+
+                    // play audio
+                    Mix_PlayChannel(-1, gSoundExplosion, 0);
                     
                     numDie++;
                     if (numDie <= 3) {
@@ -353,6 +375,9 @@ int main(int argc, char* argv[])
                         bool bCol = SDLBase::CheckCollision(bRect, tRect);
 
                         if (bCol) {
+                            // audio
+                            Mix_PlayChannel(-1, gSoundExplosion, 0);
+
                             markValue++;
                             for (int ex = 0; ex < NUM_FRAME_EX; ex++) {
                                 int xPos = pBullet -> GetRect().x - 0.5*frameExpWidth;

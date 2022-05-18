@@ -36,7 +36,7 @@ public:
     void Show(SDL_Renderer* des);
 
     // base on input action to modify 'inputType' and 'status'
-    void HandleInput(SDL_Event events, SDL_Renderer* screen);
+    void HandleInput(SDL_Event events, Mix_Chunk* bulletSound[3], SDL_Renderer* screen);
     
     // create info about frame-rect on big picture
     void SetClips();

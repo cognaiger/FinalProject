@@ -10,11 +10,17 @@
 #include"SDL2/SDL.h"
 #include"SDL2/SDL_image.h"
 #include"SDL2/SDL_ttf.h"
+#include"SDL2/SDL_mixer.h"
 
 // declare all static variable
 static SDL_Window* gWindow = NULL;
 static SDL_Renderer* gSurface = NULL;
 static SDL_Event gEvent;
+
+// audio
+static Mix_Chunk* gSoundBullet[3];
+static Mix_Chunk* gSoundExplosion = NULL;
+static Mix_Chunk* gSoundExMain = NULL;
 
 // fps
 const int FPS = 30;
