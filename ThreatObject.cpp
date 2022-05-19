@@ -220,7 +220,6 @@ void ThreatObject::InitBullet(BulletObject *pBullet, SDL_Renderer *screen) {
             pBullet -> SetXVal(15);
             bulletList.push_back(pBullet);
         }
-        
     } 
 }
 

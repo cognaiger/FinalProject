@@ -31,10 +31,16 @@ public:
 
     void SetMapXY(const int& mx, const int& my) { mapX = mx; mapY = my; }
 
+    // recharge threat
     void InitThreat();
 
+    // set clip of 1 frame
     void SetClips();
+
+    // load img and get widthFrame, heightFrame
     bool LoadImg(std::string path, SDL_Renderer* screen);
+
+    // base on frame to show threat
     void Show(SDL_Renderer* des);
 
     int GetWidthFrame() const { return widthFrame; }
@@ -54,6 +60,7 @@ public:
     void InitBullet(BulletObject* pBullet, SDL_Renderer* screen);
     void MakeBullet(SDL_Renderer* screen, const int& xLimit, const int& yLimit);
 
+    // delete where pullet point to
     void RemoveBullet(const int& idx);
     SDL_Rect GetRectFrame();
 

@@ -16,6 +16,9 @@ TextObject::~TextObject() {
 }
 
 bool TextObject::LoadFromRenderText(TTF_Font* font, SDL_Renderer* screen) {
+    if (texture != NULL) {
+        Free();
+    }
     SDL_Surface* textSurface = TTF_RenderText_Solid(font, strVal.c_str(), textColor);
     if (textSurface) {
         texture = SDL_CreateTextureFromSurface(screen, textSurface);

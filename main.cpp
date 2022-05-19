@@ -510,6 +510,8 @@ int main(int argc, char* argv[])
 
         SDL_RenderPresent(gSurface);
 
+
+        // manage fps
         int realImpTime = fpsTimer.GetTicks();
         int timeOneFrame = 1000/FPS;   // ms
 
