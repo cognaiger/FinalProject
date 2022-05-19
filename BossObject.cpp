@@ -138,34 +138,6 @@ void BossObject::InitPlayer()
     inputType.left = 1;
 }
 
-/*
-void BossObject::CenterEntityOnMap(Map& g_map)
-{
-    g_map.startX = xPos - (WINDOW_WIDTH/2);
-
-    if (g_map.startX < 0)
-    {
-        g_map.startX = 0;
-    }
-
-    else if (g_map.startX + SCREEN_WIDTH >= g_map.max_x_)
-    {
-        g_map.start_x_= g_map.max_x_ - SCREEN_WIDTH;
-    }
-
-    g_map.start_y_ = y_pos_ - (SCREEN_HEIGHT / 2);
-
-    if (g_map.start_y_ < 0)
-    {
-        g_map.start_y_ = 0;
-    }
-
-    else if (g_map.start_y_+ SCREEN_HEIGHT >= g_map.max_y_)
-    {
-        g_map.start_y_ = g_map.max_y_ - SCREEN_HEIGHT;
-    }
-}
-*/
 
 void BossObject::CheckToMap(Map& g_map)
 {
@@ -309,6 +281,7 @@ void BossObject::MakeBullet(SDL_Renderer* des, const int& x_limit, const int& y_
             else
             {
                p_bullet -> free();
+               delete p_bullet;
                bulletList.erase(bulletList.begin() + i);
             }
         }

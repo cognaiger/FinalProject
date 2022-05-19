@@ -440,6 +440,54 @@ int main(int argc, char* argv[])
             boss.DoPlayer(mapData);
             boss.MakeBullet(gSurface, WINDOW_WIDTH, WINDOW_HEIGHT);
             boss.Show(gSurface);
+
+
+            // collision between bossBullet with player
+            bool bCol = false;
+            SDL_Rect rectPlayer = gPlayer.GetRectFrame();
+            std::vector<BulletObject*> bossBullet = boss.GetBulletList();
+            for (int bo = 0; bo < bossBullet.size(); bo++) {
+                BulletObject* bossbul = bossBullet[bo];
+                if (bossbul != NULL) {
+                    SDL_Rect bulletRect = bossbul -> GetRect();
+                    bCol = SDLBase::CheckCollision(rectPlayer, bulletRect);
+
+                    if (bCol) {
+                        int widthExpFrame = expMain.GetFrameWidth();
+                        int heightExpFrame = expMain.GetFrameHeight();
+                        for (int i = 0; i < NUM_FRAME_EX; i++) {
+                            int xPos = (gPlayer.GetRectFrame().x + gPlayer.GetRectFrame().w * 0.5)
+                                    - widthExpFrame*0.5;
+                            int yPos = (gPlayer.GetRectFrame().y + gPlayer.GetRectFrame().h * 0.5)
+                                        - heightExpFrame*0.5;
+                        
+                            expMain.SetFrame(i);
+                            expMain.SetRect(xPos, yPos);
+                            expMain.Show(gSurface);
+                            SDL_RenderPresent(gSurface);
+                        }
+
+                        // play audio
+                        Mix_PlayChannel(-1, gSoundExplosion, 0);
+                    
+                        numDie++;
+                        if (numDie <= 3) {
+                            gPlayer.SetRect(0, 0);
+                            gPlayer.SetComebackTime(60);
+                            SDL_Delay(1000);
+                            playerPow.Decrease();
+                            playerPow.Render(gSurface);
+                            continue;
+                        } else {
+                            if (MessageBox(NULL, _T("Game Over"), _T("Info"), MB_OK | MB_ICONSTOP) == IDOK) {
+                                close();
+                                SDL_Quit();
+                                return 0;
+                            }  
+                        }
+                    }
+                }
+            }
         }
         
 
