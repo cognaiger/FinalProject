@@ -60,7 +60,8 @@ public:
     void InitBullet(SDL_Renderer* screen);
 
     // boss shoot bullet
-    void MakeBullet(SDL_Renderer* des, const int& x_limit, const int& y_limit);
+    void MakeBullet(SDL_Renderer* des, const int& x_limit, 
+                    const int& y_limit, Mix_Chunk* soundExMain);
 
 private:
     int mapX;

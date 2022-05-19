@@ -116,7 +116,7 @@ void MainPlayer::HandleInput(SDL_Event events, Mix_Chunk* bulletSound[3], SDL_Re
             BulletObject* pBullet = new BulletObject();
             pBullet -> SetBulletType(bulletType);
             pBullet -> LoadImgBullet(screen);
-            int ret = Mix_PlayChannel(-1, bulletSound[0], 0);
+            int ret = Mix_PlayChannel(-1, bulletSound[bulletType - 50], 0);
 
             if (status == WALK_LEFT) {
                 pBullet -> SetBulletDir(BulletObject::DIR_LEFT);
@@ -135,7 +135,8 @@ void MainPlayer::HandleInput(SDL_Event events, Mix_Chunk* bulletSound[3], SDL_Re
     }
 }
 
-void MainPlayer::DoPlayer(Map& mapData) {
+void MainPlayer::DoPlayer(Map& mapData, Mix_Chunk* soundCoin, Mix_Chunk* soundJump, 
+                    Mix_Chunk* soundRecharging) {
     if (comeBackTime == 0) {
         xVal = 0;
         yVal += GRAVITY_SPEED;
@@ -154,17 +155,20 @@ void MainPlayer::DoPlayer(Map& mapData) {
             if (onGround == true) {
                 yVal = -PLAYER_JUMP_VALUE;
                 onGround = false;
+                Mix_PlayChannel(-1, soundJump, 0);
             }
             inputType.jump = 0;
         }
 
-        CheckToMap(mapData);
+        CheckToMap(mapData, soundCoin);
         CenterEntityOnMap(mapData);
     }
 
     if (comeBackTime > 0) {
         comeBackTime--;
         if (comeBackTime == 0) {             // reset again
+            Mix_PlayChannel(-1, soundRecharging, 0);
+
             onGround = false;
             if (xPos > 256) {
                 xPos -= 256;        // 4 tile map
@@ -197,7 +201,7 @@ void MainPlayer::CenterEntityOnMap(Map& mapData) {
     }
 }
 
-void MainPlayer::CheckToMap(Map& mapData) {
+void MainPlayer::CheckToMap(Map& mapData, Mix_Chunk* soundCoin) {
     int x1 = 0;
     int x2 = 0;
 
@@ -224,6 +228,7 @@ void MainPlayer::CheckToMap(Map& mapData) {
                 mapData.tile[y1][x2] = 0;
                 mapData.tile[y2][x2] = 0;
                 IncreaseCoin();
+                Mix_PlayChannel(-1, soundCoin, 0);
             } else if ((val1 != BLANK_TILE && val1 != SMALL_TREE && val1 != BIG_TREE)
                     || (val2 != BLANK_TILE && val2 != SMALL_TREE && val2 != BIG_TREE))
             {
@@ -240,6 +245,7 @@ void MainPlayer::CheckToMap(Map& mapData) {
                 mapData.tile[y1][x1] = 0;
                 mapData.tile[y2][x1] = 0;
                 IncreaseCoin();
+                Mix_PlayChannel(-1, gSoundCoin, 0);
             } else if ((val1 != BLANK_TILE && val1 != SMALL_TREE && val1 != BIG_TREE)
                     || (val2 != BLANK_TILE && val2 != SMALL_TREE && val2 != BIG_TREE))
             {
@@ -268,6 +274,7 @@ void MainPlayer::CheckToMap(Map& mapData) {
                 mapData.tile[y2][x1] = 0;
                 mapData.tile[y2][x2] = 0;
                 IncreaseCoin();
+                Mix_PlayChannel(-1, gSoundCoin, 0);
             } else if ((val1 != BLANK_TILE && val1 != SMALL_TREE && val1 != BIG_TREE)
                     || (val2 != BLANK_TILE && val2 != SMALL_TREE && val2 != BIG_TREE))
             {
@@ -288,6 +295,7 @@ void MainPlayer::CheckToMap(Map& mapData) {
                 mapData.tile[y2][x1] = 0;
                 mapData.tile[y2][x2] = 0;
                 IncreaseCoin();
+                Mix_PlayChannel(-1, gSoundCoin, 0);
             } else if ((val1 != BLANK_TILE && val1 != SMALL_TREE && val1 != BIG_TREE)
                     || (val2 != BLANK_TILE && val2 != SMALL_TREE && val2 != BIG_TREE))
             {

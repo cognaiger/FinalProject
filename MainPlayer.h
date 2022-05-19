@@ -45,12 +45,13 @@ public:
     handle distance player will move vertically and horizonally (xVal, yVal)
     based on current input
     */
-    void DoPlayer(Map& mapData);
+    void DoPlayer(Map& mapData, Mix_Chunk* soundCoin, Mix_Chunk* soundJump, 
+                    Mix_Chunk* soundRecharging);
 
     /*
     handle interaction between player and map in 4 directions
     */
-    void CheckToMap(Map& mapData);
+    void CheckToMap(Map& mapData, Mix_Chunk* soundCoin);
 
     /* base on current position of player to decide where new map locate
     modify mapData.startX, mapData.startY

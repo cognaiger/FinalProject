@@ -60,18 +60,31 @@ bool init()
             // init audio
             const char soundBullet1[] = "sound/gunShot.wav";
             const char soundBullet2[] = "sound/gunShot2.wav";
+            const char soundBullet3[] = "sound/gunShot3.wav";
             const char soundExplosion[] = "sound/Explosion.wav";
-            const char soundExMain[] = "sound/exMain.wav"; 
+            const char soundExMain[] = "sound/dragon.wav"; 
+            const char soundBackground[] = "sound/background.wav";
+            const char soundJump[] = "sound/jumpingSound.wav";
+            const char soundCollect[] = "sound/collectCoin.wav";
+            const char soundRecharging[] = "sound/recharging.wav";
             if (Mix_OpenAudio(22050, MIX_DEFAULT_FORMAT, 2, 4096) != 0) {
                 return false;
             } else {
                 gSoundBullet[0] = Mix_LoadWAV(soundBullet1);
                 gSoundBullet[1] = Mix_LoadWAV(soundBullet2);
+                gSoundBullet[2] = Mix_LoadWAV(soundBullet3);
                 gSoundExplosion = Mix_LoadWAV(soundExplosion);
                 gSoundExMain = Mix_LoadWAV(soundExMain);
+                gSoundBackground = Mix_LoadWAV(soundBackground);
+                gSoundJump = Mix_LoadWAV(soundJump);
+                gSoundCoin = Mix_LoadWAV(soundCollect);
+                gSoundRecharging = Mix_LoadWAV(soundRecharging);
 
                 if (gSoundBullet[0] == NULL || gSoundBullet[1] == NULL 
-                    || gSoundExplosion == NULL || gSoundExMain == NULL) {
+                    || gSoundBullet[2] == NULL || gSoundExplosion == NULL 
+                    || gSoundExMain == NULL || gSoundBackground == NULL
+                    || gSoundJump == NULL || gSoundCoin == NULL
+                    || gSoundRecharging == NULL) {
                         return false;
                     }
             }
@@ -239,11 +252,14 @@ int main(int argc, char* argv[])
     int retMenu = Menu::ShowMenu(gSurface, fontTime);
     if (retMenu == 1) {
         quit = true;
+    } else {
+        // background music
+        Mix_PlayChannel(-1, gSoundBackground, -1);
     }
 
-
     // game loop
-    while (!quit) {
+    while (!quit) {   
+
         fpsTimer.start();
 
         while (SDL_PollEvent(&gEvent) != 0) {
@@ -262,7 +278,7 @@ int main(int argc, char* argv[])
 
         gPlayer.HandleBullet(gSurface);
         gPlayer.SetMapXY(mapData.startX, mapData.startY);
-        gPlayer.DoPlayer(mapData);
+        gPlayer.DoPlayer(mapData, gSoundCoin, gSoundJump, gSoundRecharging);
         gPlayer.Show(gSurface);
 
         mainMap.SetMap(mapData);
@@ -438,7 +454,7 @@ int main(int argc, char* argv[])
         if (val <= WINDOW_WIDTH) {
             boss.SetMapXY(mapData.startX, mapData.startY);
             boss.DoPlayer(mapData);
-            boss.MakeBullet(gSurface, WINDOW_WIDTH, WINDOW_HEIGHT);
+            boss.MakeBullet(gSurface, WINDOW_WIDTH, WINDOW_HEIGHT, gSoundExMain);
             boss.Show(gSurface);
 
 

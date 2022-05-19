@@ -261,7 +261,8 @@ void BossObject::InitBullet(SDL_Renderer* screen)
 }
 
 
-void BossObject::MakeBullet(SDL_Renderer* des, const int& x_limit, const int& y_limit)
+void BossObject::MakeBullet(SDL_Renderer* des, const int& x_limit, 
+                    const int& y_limit, Mix_Chunk* soundExMain)
 {
     if (frame == 18)
     {
@@ -277,6 +278,8 @@ void BossObject::MakeBullet(SDL_Renderer* des, const int& x_limit, const int& y_
             {
                 p_bullet -> HandleMove(x_limit, y_limit);
                 p_bullet -> Render(des);
+
+                Mix_PlayChannel(-1, soundExMain, 0);
             }
             else
             {

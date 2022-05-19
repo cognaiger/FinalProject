@@ -21,6 +21,10 @@ static SDL_Event gEvent;
 static Mix_Chunk* gSoundBullet[3];
 static Mix_Chunk* gSoundExplosion = NULL;
 static Mix_Chunk* gSoundExMain = NULL;
+static Mix_Chunk* gSoundBackground = NULL;
+static Mix_Chunk* gSoundJump = NULL;
+static Mix_Chunk* gSoundCoin = NULL;
+static Mix_Chunk* gSoundRecharging = NULL;
 
 // fps
 const int FPS = 30;
