@@ -14,6 +14,7 @@ BossObject::BossObject()
     thinkTime = 0;
     mapX = 0;
     mapY = 0;
+    health = 5;
 }
 
 BossObject::~BossObject()
@@ -289,4 +290,9 @@ void BossObject::MakeBullet(SDL_Renderer* des, const int& x_limit,
             }
         }
     }
+}
+
+SDL_Rect BossObject::GetRectFrame() const {
+    SDL_Rect rectFrame = {rect.x, rect.y, widthFrame, heightFrame};
+    return rectFrame;
 }

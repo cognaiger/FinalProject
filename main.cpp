@@ -410,6 +410,32 @@ int main(int argc, char* argv[])
                         }
                     }
                 }
+
+                // collision with boss
+                SDL_Rect bossRect = boss.GetRectFrame();
+                SDL_Rect bRect = pBullet -> GetRect();
+                bool bCol1 = false;
+                bCol1 = SDLBase::CheckCollision(bossRect, bRect) && (boss.GetHealth() > 0);
+                if (bCol1) {
+                    // audio
+                    Mix_PlayChannel(-1, gSoundExplosion, 0);
+
+                    boss.DecreaseHealth();
+                    for (int ex = 0; ex < NUM_FRAME_EX; ex++) {
+                        int xPos = pBullet -> GetRect().x - 0.5*frameExpWidth;
+                        int yPos = pBullet -> GetRect().y - 0.5*frameExpHeight;
+
+                        expThreat.SetFrame(ex);
+                        expThreat.SetRect(xPos, yPos);
+                        expThreat.Show(gSurface);
+                    }
+
+                    gPlayer.RemoveBullet(r);
+
+                    if (boss.GetHealth() <= 0) {   // boss die
+                        boss.SetThinkTime(10000);
+                    }
+                }
             }
         }
 

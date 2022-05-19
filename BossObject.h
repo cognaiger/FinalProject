@@ -63,6 +63,14 @@ public:
     void MakeBullet(SDL_Renderer* des, const int& x_limit, 
                     const int& y_limit, Mix_Chunk* soundExMain);
 
+    void DecreaseHealth() { health--; };
+    int GetHealth() const { return health; };
+
+    // take rect one frame of boss
+    SDL_Rect GetRectFrame() const;
+
+    void SetThinkTime(const int& thinkTime_) { thinkTime = thinkTime_; }
+
 private:
     int mapX;
     int mapY;
@@ -77,6 +85,9 @@ private:
     float yVal;
     int widthFrame;
     int heightFrame;
+
+    // health
+    int health;
 
     // handle bullet
     std::vector<BulletObject*> bulletList;
