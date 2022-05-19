@@ -15,9 +15,11 @@ BulletObject::~BulletObject() {
 bool BulletObject::LoadImgBullet(SDL_Renderer* des) {
     bool ret = false;
     if (bulletType == LASER_BULLET) {
-        ret = LoadImg("img/laser_bullet.png", des);
-    } else {
-        ret = LoadImg("img/bullet.png", des);
+        ret = LoadImg("img/bullet2.png", des);
+    } else if (bulletType == SPHERE_BULLET) {
+        ret = LoadImg("img/bullet1.png", des);
+    } else if (bulletType == MISSILE_BULLET) {
+        ret = LoadImg("img/bullet3.png", des);
     }
     return ret;
 }

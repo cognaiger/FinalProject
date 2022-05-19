@@ -3,7 +3,7 @@
 
 #include"base.h"
 
-// base class that handle object needed rendering on screen
+// handle object needed rendering on screen
 class BaseObject {
 public:
     BaseObject();

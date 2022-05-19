@@ -127,6 +127,8 @@ private:
 
     // time player come back after die
     int comeBackTime;
+
+    int bulletType;
 };
 
 #endif

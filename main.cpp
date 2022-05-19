@@ -203,7 +203,7 @@ int main(int argc, char* argv[])
     boss.SetYPos(10);
 
 
-    
+    // explosion
     ExplosionObject expThreat;
     bool tRet = expThreat.LoadImg("img/exp3.png", gSurface);
     if (tRet == false) {

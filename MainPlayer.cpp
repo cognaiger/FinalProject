@@ -19,6 +19,7 @@ MainPlayer::MainPlayer() {
     mapY = 0;
     comeBackTime = 0;
     coinCount = 0;
+    bulletType = BulletObject::SPHERE_BULLET;
 }
 
 MainPlayer::~MainPlayer() {
@@ -86,6 +87,12 @@ void MainPlayer::HandleInput(SDL_Event events, Mix_Chunk* bulletSound[3], SDL_Re
             inputType.left = 1;
             inputType.right = 0;
             break;
+        case SDLK_x:
+            bulletType++;
+            if (bulletType >= BulletObject::TOTAL_BULLET) {
+                bulletType = BulletObject::SPHERE_BULLET;
+            }
+            break;
         }
     } else if (events.type == SDL_KEYUP)
     {
@@ -105,9 +112,9 @@ void MainPlayer::HandleInput(SDL_Event events, Mix_Chunk* bulletSound[3], SDL_Re
         if (events.button.button == SDL_BUTTON_RIGHT) {
             inputType.jump = 1;
         } else if (events.button.button == SDL_BUTTON_LEFT) // shoot
-        {
+        {                                                   // load bullet into bulletList
             BulletObject* pBullet = new BulletObject();
-            pBullet -> SetBulletType(BulletObject::LASER_BULLET);
+            pBullet -> SetBulletType(bulletType);
             pBullet -> LoadImgBullet(screen);
             int ret = Mix_PlayChannel(-1, bulletSound[0], 0);
 
@@ -330,6 +337,7 @@ void MainPlayer::HandleBullet(SDL_Renderer* des) {
                 pBullet -> Render(des);
             }
             else {
+                pBullet -> free();
                 RemoveBullet(i);
             }
         }

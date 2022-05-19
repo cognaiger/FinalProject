@@ -25,7 +25,9 @@ public:
 
     enum BulletType {
         SPHERE_BULLET = 50,
-        LASER_BULLET = 51
+        LASER_BULLET = 51,
+        MISSILE_BULLET = 52,
+        TOTAL_BULLET = 53,
     };
 
     void SetXVal(const int& xVal_) { xVal = xVal_; }
@@ -42,8 +44,10 @@ public:
     void SetBulletType(const unsigned int& bulletType_) { bulletType = bulletType_; }
     unsigned int GetBulletType() const { return bulletType; }
 
-    // decide where bullet is not move
+    // decide where bullet is not move (base on direct)
     void HandleMove(const int& xBorder, const int& yBorder);
+
+    // base on bulletType to decide which image to load
     bool LoadImgBullet(SDL_Renderer* des);
 private:
     // horizontal velocity of bullet 
