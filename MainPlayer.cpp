@@ -225,9 +225,14 @@ void MainPlayer::CheckToMap(Map& mapData, Mix_Chunk* soundCoin) {
             int val2 = mapData.tile[y2][x2];
 
             if (val1 == COIN_TILE || val2 == COIN_TILE) {
-                mapData.tile[y1][x2] = 0;
-                mapData.tile[y2][x2] = 0;
-                IncreaseCoin();
+                if (val1 == COIN_TILE) {
+                    mapData.tile[y1][x2] = 0;
+                    IncreaseCoin();
+                }
+                if (val2 == COIN_TILE) {
+                    mapData.tile[y2][x2] = 0;
+                    IncreaseCoin();
+                }
                 Mix_PlayChannel(-1, soundCoin, 0);
             } else if ((val1 != BLANK_TILE && val1 != SMALL_TREE && val1 != BIG_TREE)
                     || (val2 != BLANK_TILE && val2 != SMALL_TREE && val2 != BIG_TREE))
@@ -242,10 +247,15 @@ void MainPlayer::CheckToMap(Map& mapData, Mix_Chunk* soundCoin) {
             int val2 = mapData.tile[y2][x1];
 
             if (val1 == COIN_TILE || val2 == COIN_TILE) {
-                mapData.tile[y1][x1] = 0;
-                mapData.tile[y2][x1] = 0;
-                IncreaseCoin();
-                Mix_PlayChannel(-1, gSoundCoin, 0);
+               if (val1 == COIN_TILE) {
+                    mapData.tile[y1][x1] = 0;
+                    IncreaseCoin();
+                }
+                if (val2 == COIN_TILE) {
+                    mapData.tile[y2][x1] = 0;
+                    IncreaseCoin();
+                }
+                Mix_PlayChannel(-1, soundCoin, 0);
             } else if ((val1 != BLANK_TILE && val1 != SMALL_TREE && val1 != BIG_TREE)
                     || (val2 != BLANK_TILE && val2 != SMALL_TREE && val2 != BIG_TREE))
             {
@@ -271,10 +281,16 @@ void MainPlayer::CheckToMap(Map& mapData, Mix_Chunk* soundCoin) {
             int val1 = mapData.tile[y2][x1];
             int val2 = mapData.tile[y2][x2];
             if (val1 == COIN_TILE || val2 == COIN_TILE) {
-                mapData.tile[y2][x1] = 0;
-                mapData.tile[y2][x2] = 0;
-                IncreaseCoin();
-                Mix_PlayChannel(-1, gSoundCoin, 0);
+                if (val1 == COIN_TILE) {
+                    mapData.tile[y2][x1] = 0;
+                    IncreaseCoin();
+                }
+                Mix_PlayChannel(-1, soundCoin, 0);
+                if (val2 == COIN_TILE) {
+                    mapData.tile[y2][x2] = 0;
+                    IncreaseCoin();
+                }
+                Mix_PlayChannel(-1, soundCoin, 0);
             } else if ((val1 != BLANK_TILE && val1 != SMALL_TREE && val1 != BIG_TREE)
                     || (val2 != BLANK_TILE && val2 != SMALL_TREE && val2 != BIG_TREE))
             {
@@ -292,10 +308,16 @@ void MainPlayer::CheckToMap(Map& mapData, Mix_Chunk* soundCoin) {
             int val2 = mapData.tile[y2][x2];
 
             if (val1 == COIN_TILE || val2 == COIN_TILE) {
-                mapData.tile[y2][x1] = 0;
-                mapData.tile[y2][x2] = 0;
-                IncreaseCoin();
-                Mix_PlayChannel(-1, gSoundCoin, 0);
+                if (val1 == COIN_TILE) {
+                    mapData.tile[y2][x1] = 0;
+                    IncreaseCoin();
+                    Mix_PlayChannel(-1, gSoundCoin, 0);
+                }
+                if (val2 == COIN_TILE) {
+                    mapData.tile[y2][x2] = 0;
+                    IncreaseCoin();
+                    Mix_PlayChannel(-1, gSoundCoin, 0);
+                }
             } else if ((val1 != BLANK_TILE && val1 != SMALL_TREE && val1 != BIG_TREE)
                     || (val2 != BLANK_TILE && val2 != SMALL_TREE && val2 != BIG_TREE))
             {

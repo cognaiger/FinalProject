@@ -11,10 +11,9 @@
 #include"BossObject.h"
 
 BaseObject gBackground;
-TTF_Font* fontTime;
 
 
-// set up window and renderer
+// set up image, font, audio, window and renderer
 bool init();
 
 // load background on renderer
@@ -23,14 +22,19 @@ bool loadBackground();
 // shut up everything
 void close();
 
-// set up window and renderer
+/*
+create 20 static threats and 20 dynamic threats and set up
+return 'listThreat' 
+*/
+std::vector<ThreatObject*> MakeThreatList();
+
 bool init()
 {
     bool success = true;
     if( SDL_Init( SDL_INIT_VIDEO ) >= 0 )
     {
         SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "1");
-        gWindow = SDL_CreateWindow( "Shooter", SDL_WINDOWPOS_UNDEFINED,
+        gWindow = SDL_CreateWindow( "THE ADVENTURERS", SDL_WINDOWPOS_UNDEFINED,
         SDL_WINDOWPOS_UNDEFINED, WINDOW_WIDTH, WINDOW_HEIGHT, SDL_WINDOW_SHOWN );
         if( gWindow != NULL )
         {
@@ -48,11 +52,13 @@ bool init()
                     success = false;
             }
 
+            // init font
             if (TTF_Init() == -1) {
                 success = false;
             } else {
                 fontTime = TTF_OpenFont("font/dlxfont_.ttf", 15);
-                if (fontTime == NULL) {
+                fontMenu = TTF_OpenFont("font/Crosterian.ttf", 20);
+                if (fontTime == NULL || fontMenu == NULL) {
                     success = false;
                 }
             }
@@ -101,6 +107,7 @@ bool init()
 
     return success;
 }
+
  
 void close()
 {
@@ -124,10 +131,6 @@ bool loadBackground() {
     return true;
 }
 
-/*
-create 20 static threats and 20 dynamic threats and set up
-return 'listThreat' 
-*/
 std::vector<ThreatObject*> MakeThreatList() {
     std::vector<ThreatObject*> listThreat;
 
@@ -179,8 +182,10 @@ int main(int argc, char* argv[])
     if (loadBackground() == 0)
         return -1;
 
+    // manage fps
     Timer fpsTimer;
 
+    // init map
     GameMap mainMap;
     char pathMap[] = "map/map01.dat";
     mainMap.LoadMap(pathMap);
@@ -188,17 +193,18 @@ int main(int argc, char* argv[])
     Map mapData = mainMap.GetMap();
 
 
-    // player
+    // init player
     MainPlayer gPlayer;
     gPlayer.LoadImg("img/player_right.png", gSurface);
     gPlayer.SetClips();
 
 
-
+    // init player health (image)
     PlayerPower playerPow;
     playerPow.Init(gSurface);
 
 
+    // player money (image)
     PlayerMoney playerMon;
     playerMon.Init(gSurface);
     playerMon.SetPos(WINDOW_WIDTH*0.5 - 300, 8);
@@ -235,7 +241,7 @@ int main(int argc, char* argv[])
     int numDie = 0;
 
 
-    // time text
+    // text
     TextObject timeGame;
     timeGame.SetColor(TextObject::WHITE_TEXT);
 
@@ -249,7 +255,7 @@ int main(int argc, char* argv[])
     bool quit = false;
 
 
-    int retMenu = Menu::ShowMenu(gSurface, fontTime);
+    int retMenu = Menu::ShowMenu(gSurface, fontMenu);
     if (retMenu == 1) {
         quit = true;
     } else {
@@ -292,13 +298,13 @@ int main(int argc, char* argv[])
 
         GeometricFormat outLine(1, 1, WINDOW_WIDTH - 1, 38);
         ColorData colorData2(255, 255, 255);
-
         Geometric::RenderOutline(outLine, colorData2, gSurface);
 
 
         playerPow.Show(gSurface);
         playerMon.Show(gSurface);
 
+        // collision between threat (and bullet) vs player
         for (int i = 0; i < threatList.size(); i++) {
             ThreatObject* pThreat = threatList[i];
             if (pThreat != NULL) {
@@ -377,6 +383,8 @@ int main(int argc, char* argv[])
         for (int r = 0; r < bulletArr.size(); r++) {
             BulletObject* pBullet = bulletArr[r];
             if (pBullet != NULL) {
+
+                // bullet vs threat
                 for (int t = 0; t < threatList.size(); t++) {
                     ThreatObject* obThreat = threatList[t];
                     if (obThreat != NULL) {
@@ -468,6 +476,11 @@ int main(int argc, char* argv[])
         markGame.RenderText(gSurface);
 
         int coinCount = gPlayer.GetCointCount();
+        if (coinCount >= 10) {
+            numDie--;
+            playerPow.Increase();
+            gPlayer.DecreaseCoin(10);
+        }
         std::string moneyStr = std::to_string(coinCount);
         moneyGame.SetText(moneyStr);
         moneyGame.LoadFromRenderText(fontTime, gSurface);
@@ -484,7 +497,7 @@ int main(int argc, char* argv[])
             boss.Show(gSurface);
 
 
-            // collision between bossBullet with player
+            // collision between boss with player
             bool bCol = false;
             SDL_Rect rectPlayer = gPlayer.GetRectFrame();
             std::vector<BulletObject*> bossBullet = boss.GetBulletList();
@@ -528,6 +541,45 @@ int main(int argc, char* argv[])
                             }  
                         }
                     }
+                }
+            }
+
+            // collision between player vs boss
+            bool bCol1 = false;
+            SDL_Rect bossRect = boss.GetRectFrame();
+            bCol1 = SDLBase::CheckCollision(rectPlayer, bossRect) && (boss.GetHealth() > 0);
+            if (bCol1) {
+                int widthExpFrame = expMain.GetFrameWidth();
+                int heightExpFrame = expMain.GetFrameHeight();
+                for (int i = 0; i < NUM_FRAME_EX; i++) {
+                    int xPos = (gPlayer.GetRectFrame().x + gPlayer.GetRectFrame().w * 0.5)
+                                - widthExpFrame*0.5;
+                    int yPos = (gPlayer.GetRectFrame().y + gPlayer.GetRectFrame().h * 0.5)
+                                - heightExpFrame*0.5;
+                        
+                    expMain.SetFrame(i);
+                    expMain.SetRect(xPos, yPos);
+                    expMain.Show(gSurface);
+                    SDL_RenderPresent(gSurface);
+                }
+
+                // play audio
+                Mix_PlayChannel(-1, gSoundExplosion, 0);
+                    
+                numDie++;
+                if (numDie <= 3) {
+                    gPlayer.SetRect(0, 0);
+                    gPlayer.SetComebackTime(60);
+                    SDL_Delay(1000);
+                    playerPow.Decrease();
+                    playerPow.Render(gSurface);
+                    continue;
+                } else {
+                    if (MessageBox(NULL, _T("Game Over"), _T("Info"), MB_OK | MB_ICONSTOP) == IDOK) {
+                        close();
+                        SDL_Quit();
+                        return 0;
+                    }  
                 }
             }
         }

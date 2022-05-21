@@ -4,6 +4,7 @@
 #include"base.h"
 #include"BaseObject.h"
 
+// represent health image player have
 class PlayerPower : public BaseObject
 {
 public:
@@ -12,7 +13,11 @@ public:
 
     void SetNum(const int& num) { number = num; }
     void AddPos(const int& xPos);
+
+    // base on element in posList to show on renderer
     void Show(SDL_Renderer* screen);
+
+    // init 3 health, image and position
     void Init(SDL_Renderer* screen);
 
     void Increase();
@@ -20,6 +25,7 @@ public:
 
 private:
     int number;
+    // position(x) where image is displayed
     std::vector<int> posList;
 };
 

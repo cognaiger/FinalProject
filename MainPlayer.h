@@ -82,6 +82,8 @@ public:
     // increase coin by 1
     void IncreaseCoin();
 
+    void DecreaseCoin(const int& x) { coinCount -= x; }
+
     // set comeBackTime = parameter
     void SetComebackTime(const int& cbTime) { comeBackTime = cbTime; }
 

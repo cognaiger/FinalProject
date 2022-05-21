@@ -26,6 +26,10 @@ static Mix_Chunk* gSoundJump = NULL;
 static Mix_Chunk* gSoundCoin = NULL;
 static Mix_Chunk* gSoundRecharging = NULL;
 
+// font
+static TTF_Font* fontTime;
+static TTF_Font* fontMenu;
+
 // fps
 const int FPS = 30;
 
@@ -64,7 +68,6 @@ typedef struct Input {
 
 namespace SDLBase {
     bool CheckCollision(const SDL_Rect& object1, const SDL_Rect& object2);
-    void ApplySurface(SDL_Surface* src, SDL_Renderer* des, int x, int y);
     bool CheckFocusWithRect(const int& x, const int& y, const SDL_Rect& rect);
 }
 
