@@ -141,7 +141,7 @@ std::vector<ThreatObject*> MakeThreatList() {
             pThreat -> LoadImg("img/threat_left.png", gSurface);
             pThreat -> SetClips();
             pThreat -> SetTypeMove(ThreatObject::MOVE_IN_SPACE_THREAT);
-            pThreat -> SetInputLeft(1);
+            pThreat -> SetInputLeft();
             pThreat -> SetXPos(500 + i*700);
             pThreat -> SetYPos(250);
 
@@ -153,7 +153,7 @@ std::vector<ThreatObject*> MakeThreatList() {
         }
     }
 
-
+    // static threat
     ThreatObject* threatObj = new ThreatObject[20];
     for (int i = 0; i < 20; i++) {
         ThreatObject* pThreat = (threatObj + i);
@@ -252,6 +252,10 @@ int main(int argc, char* argv[])
     TextObject moneyGame;
     moneyGame.SetColor(TextObject::BLACK_TEXT);
 
+    // handle time after boss die
+    int timeAfterBoss = 200;
+
+
     bool quit = false;
 
 
@@ -310,7 +314,7 @@ int main(int argc, char* argv[])
             if (pThreat != NULL) {
                 pThreat -> SetMapXY(mapData.startX, mapData.startY);
                 pThreat -> ImpMoveType(gSurface);
-                pThreat -> DoThreat(mapData);
+                pThreat -> DoThreat(mapData, gSurface);
                 pThreat -> MakeBullet(gSurface, WINDOW_WIDTH, WINDOW_HEIGHT);
                 pThreat -> Show(gSurface);
 
@@ -445,6 +449,23 @@ int main(int argc, char* argv[])
                     }
                 }
             }
+        }
+
+        if (boss.GetHealth() <= 0) {
+            timeAfterBoss--;
+            if (timeAfterBoss <= 0) {
+                if (MessageBox
+                    (NULL, 
+                    _T("Congratulation, you win!"), 
+                    _T("Info"), 
+                    MB_OK | MB_ICONINFORMATION)
+                    == IDOK) 
+                    {
+                        close();
+                        SDL_Quit();
+                        return 0; 
+                    }
+                }
         }
 
         // Show game time

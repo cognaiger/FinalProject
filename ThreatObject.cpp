@@ -30,6 +30,16 @@ bool ThreatObject::LoadImg(std::string path, SDL_Renderer* screen) {
     return ret;
 }
 
+bool ThreatObject::LoadImgRight(SDL_Renderer* screen) {
+    bool ret = LoadImg("img/threat_right.png", screen);
+    return ret;
+}
+
+bool ThreatObject::LoadImgLeft(SDL_Renderer* screen) {
+    bool ret = LoadImg("img/threat_left.png", screen);
+    return ret;
+}
+
 void ThreatObject::SetClips() {
     if (widthFrame && heightFrame) {
         for (int i = 0; i < THREAT_FRAME_NUM; i++) {
@@ -56,7 +66,7 @@ void ThreatObject::Show(SDL_Renderer* des) {
     }
 }
 
-void ThreatObject::DoThreat(Map& mapData) {
+void ThreatObject::DoThreat(Map& mapData, SDL_Renderer* screen) {
     if (comeBackTime == 0) {
         xVal = 0;
         yVal += SDL_STANDARD_GRAVITY;
@@ -70,7 +80,7 @@ void ThreatObject::DoThreat(Map& mapData) {
             xVal += THREAT_SPEED;
         }
 
-        CheckToMap(mapData);
+        CheckToMap(mapData, screen);
     } else if (comeBackTime > 0) {
         comeBackTime--;
         if (comeBackTime == 0) {
@@ -79,7 +89,7 @@ void ThreatObject::DoThreat(Map& mapData) {
     }
 }
 
-void ThreatObject::CheckToMap(Map& mapData) {
+void ThreatObject::CheckToMap(Map& mapData, SDL_Renderer* screen) {
     int x1 = 0;
     int x2 = 0;
 
@@ -102,20 +112,40 @@ void ThreatObject::CheckToMap(Map& mapData) {
             int val1 = mapData.tile[y1][x2];
             int val2 = mapData.tile[y2][x2];
 
-            if ((val1 != BLANK_TILE && val1 != COIN_TILE) || (val2 != BLANK_TILE && val2 != COIN_TILE)) {
+            if ((val1 != BLANK_TILE && val1 != COIN_TILE 
+                && val1 != BIG_TREE && val1 != SMALL_TREE) 
+                || (val2 != BLANK_TILE && val2 != COIN_TILE 
+                && val2 != BIG_TREE && val2 != SMALL_TREE)) {
                 xPos = x2 * TILE_SIZE;
                 xPos -= (widthFrame + 1);
                 xVal = 0;
+                if (inputType.left == 1) {
+                    SetInputRight();
+                    LoadImgRight(screen);
+                } else if (inputType.right == 1) {
+                    SetInputLeft();
+                    LoadImgLeft(screen);
+                }
             } 
         } else if (xVal < 0)      // moving left
         {
             int val1 = mapData.tile[y1][x1];
             int val2 = mapData.tile[y2][x1];
 
-        if ((val1 != BLANK_TILE && val1 != COIN_TILE) || (val2 != BLANK_TILE && val2 != COIN_TILE))
+            if ((val1 != BLANK_TILE && val1 != COIN_TILE 
+                && val1 != BIG_TREE && val1 != SMALL_TREE) 
+                || (val2 != BLANK_TILE && val2 != COIN_TILE 
+                && val2 != BIG_TREE && val2 != SMALL_TREE))
             {
                 xPos = (x1 + 1) * TILE_SIZE;
                 xVal = 0;
+                if (inputType.left == 1) {
+                    SetInputRight();
+                    LoadImgRight(screen);
+                } else if (inputType.right == 1) {
+                    SetInputLeft();
+                    LoadImgLeft(screen);
+                }
             }
         }
     }
@@ -135,7 +165,10 @@ void ThreatObject::CheckToMap(Map& mapData) {
             int val1 = mapData.tile[y2][x1];
             int val2 = mapData.tile[y2][x2];
 
-            if ((val1 != BLANK_TILE && val1 != COIN_TILE) || (val2 != BLANK_TILE && val2 != COIN_TILE))
+            if ((val1 != BLANK_TILE && val1 != COIN_TILE 
+                && val1 != BIG_TREE && val1 != SMALL_TREE) 
+                || (val2 != BLANK_TILE && val2 != COIN_TILE 
+                && val2 != BIG_TREE && val2 != SMALL_TREE))
             {
                 yPos = y2*TILE_SIZE;
                 yPos -= (heightFrame + 1);
@@ -147,7 +180,10 @@ void ThreatObject::CheckToMap(Map& mapData) {
             int val1 = mapData.tile[y2][x1];
             int val2 = mapData.tile[y2][x2];
 
-            if ((val1 != BLANK_TILE && val1 != COIN_TILE) || (val2 != BLANK_TILE && val2 != COIN_TILE))
+            if ((val1 != BLANK_TILE && val1 != COIN_TILE 
+                && val1 != BIG_TREE && val1 != SMALL_TREE) 
+                || (val2 != BLANK_TILE && val2 != COIN_TILE 
+                && val2 != BIG_TREE && val2 != SMALL_TREE))
             {
                 yPos = (y1 + 1)*TILE_SIZE;
                 yVal = 0;
@@ -176,19 +212,17 @@ void ThreatObject::ImpMoveType(SDL_Renderer* screen) {
     } else if (typeMove == MOVE_IN_SPACE_THREAT) {
         if (onGround == true) {
             if (xPos > animationB) {
-                inputType.left = 1;
-                inputType.right = 0;
-                LoadImg("img/threat_left.png", screen);
+                SetInputLeft();
+                LoadImgLeft(screen);
             } else if (xPos < animationA) {
-                inputType.left = 0;
-                inputType.right = 1;
-                LoadImg("img/threat_right.png", screen);
+                SetInputRight();
+                LoadImgRight(screen);
             }
-        } else {
+        } else {        // on air
             if (inputType.left == 1) {
-                LoadImg("img/threat_left.png", screen);
+                LoadImgLeft(screen);
             } else {
-                LoadImg("img/threat_right.png", screen);
+                LoadImgRight(screen);
             }
         }
     }

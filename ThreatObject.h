@@ -34,38 +34,48 @@ public:
     // recharge threat
     void InitThreat();
 
-    // set clip of 1 frame
+    // set clip of frames
     void SetClips();
 
     // load img and get widthFrame, heightFrame
     bool LoadImg(std::string path, SDL_Renderer* screen);
+    bool LoadImgRight(SDL_Renderer* screen);
+    bool LoadImgLeft(SDL_Renderer* screen);
 
-    // base on frame to show threat
+    // base on frame to show threat (comebackTime = 0)
     void Show(SDL_Renderer* des);
 
     int GetWidthFrame() const { return widthFrame; }
     int GetHeightFrame() const { return heightFrame; }
 
-    void DoThreat(Map& mapData);
-    void CheckToMap(Map& mapData);
+    // handle distance threat will move horizontally and vertically
+    void DoThreat(Map& mapData, SDL_Renderer* screen);
+
+    // check interaction with map
+    void CheckToMap(Map& mapData, SDL_Renderer* screen);
 
     void SetTypeMove(const int& typeMove_) { typeMove = typeMove_; }
+
+    // set limit dynamic threat can move
     void SetAnimationPos(const int& posA, const int& posB) { animationA = posA; animationB = posB; }
-    void SetInputLeft(const int& ipLeft) { inputType.left = ipLeft; }
+    void SetInputLeft() { inputType.right = 0, inputType.left = 1; }
+    void SetInputRight() { inputType.left = 0, inputType.right = 1; }
+    
+    // decide which direct threat move (limit pos, ...)
     void ImpMoveType(SDL_Renderer* screen);
 
     std::vector<BulletObject*> GetBulletList() const { return bulletList; }
     void SetBulletList(const std::vector<BulletObject*>& bulletList_) { bulletList = bulletList_; }
 
+    // init bullet type, direct, start pos, velocity
     void InitBullet(BulletObject* pBullet, SDL_Renderer* screen);
+
+    // base on bulletList to render bullet on screen
     void MakeBullet(SDL_Renderer* screen, const int& xLimit, const int& yLimit);
 
     // delete where pullet point to
     void RemoveBullet(const int& idx);
     SDL_Rect GetRectFrame();
-
-
-
 private:
     // hold limit of map
     int mapX;

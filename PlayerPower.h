@@ -36,7 +36,10 @@ public:
     PlayerMoney();
     ~PlayerMoney();
 
+    // load image money
     bool Init(SDL_Renderer* screen);
+
+    // show image on renderer
     void Show(SDL_Renderer* screen);
     void SetPos(const int& xp, const int& yp) { xPos = xp; yPos = yp; }
 
