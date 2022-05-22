@@ -149,6 +149,9 @@ std::vector<ThreatObject*> MakeThreatList() {
             int pos2 = pThreat -> GetXPos() + 60;
             pThreat -> SetAnimationPos(pos1, pos2);
 
+            BulletObject* pBullet = new BulletObject();
+            pThreat -> InitBullet(pBullet, gSurface);
+
             listThreat.push_back(pThreat);
         }
     }
@@ -308,7 +311,6 @@ int main(int argc, char* argv[])
         playerPow.Show(gSurface);
         playerMon.Show(gSurface);
 
-        // collision between threat (and bullet) vs player
         for (int i = 0; i < threatList.size(); i++) {
             ThreatObject* pThreat = threatList[i];
             if (pThreat != NULL) {
@@ -318,6 +320,7 @@ int main(int argc, char* argv[])
                 pThreat -> MakeBullet(gSurface, WINDOW_WIDTH, WINDOW_HEIGHT);
                 pThreat -> Show(gSurface);
 
+                // collision between threat (and bullet) vs player
                 SDL_Rect rectPlayer = gPlayer.GetRectFrame();
                 bool bCol1 = false;
                 std::vector<BulletObject*> tBulletList = pThreat -> GetBulletList();
@@ -423,19 +426,20 @@ int main(int argc, char* argv[])
                     }
                 }
 
-                // collision with boss
+                // collision between player bullet with boss
                 SDL_Rect bossRect = boss.GetRectFrame();
                 SDL_Rect bRect = pBullet -> GetRect();
                 bool bCol1 = false;
-                bCol1 = SDLBase::CheckCollision(bossRect, bRect) && (boss.GetHealth() > 0);
+                bCol1 = SDLBase::CheckCollision(bossRect, bRect) && (boss.GetHealth() > 0)
+                        && (pBullet -> GetIsMove());
                 if (bCol1) {
                     // audio
                     Mix_PlayChannel(-1, gSoundExplosion, 0);
 
                     boss.DecreaseHealth();
                     for (int ex = 0; ex < NUM_FRAME_EX; ex++) {
-                        int xPos = pBullet -> GetRect().x - 0.5*frameExpWidth;
-                        int yPos = pBullet -> GetRect().y - 0.5*frameExpHeight;
+                        int xPos = pBullet -> GetRect().x + 0.5*frameExpWidth;
+                        int yPos = pBullet -> GetRect().y + 0.5*frameExpHeight;
 
                         expThreat.SetFrame(ex);
                         expThreat.SetRect(xPos, yPos);
@@ -451,6 +455,7 @@ int main(int argc, char* argv[])
             }
         }
 
+        // after kill boss you will win
         if (boss.GetHealth() <= 0) {
             timeAfterBoss--;
             if (timeAfterBoss <= 0) {
@@ -460,12 +465,12 @@ int main(int argc, char* argv[])
                     _T("Info"), 
                     MB_OK | MB_ICONINFORMATION)
                     == IDOK) 
-                    {
+                {
                         close();
                         SDL_Quit();
                         return 0; 
-                    }
                 }
+            }
         }
 
         // Show game time
@@ -518,7 +523,7 @@ int main(int argc, char* argv[])
             boss.Show(gSurface);
 
 
-            // collision between boss with player
+            // collision between boss bullet with player
             bool bCol = false;
             SDL_Rect rectPlayer = gPlayer.GetRectFrame();
             std::vector<BulletObject*> bossBullet = boss.GetBulletList();

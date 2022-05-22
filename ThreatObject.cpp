@@ -244,8 +244,14 @@ void ThreatObject::InitThreat() {
 
 void ThreatObject::InitBullet(BulletObject *pBullet, SDL_Renderer *screen) {
     if (pBullet != NULL) {
-        pBullet -> SetBulletType(BulletObject::LASER_BULLET);
-        bool ret = pBullet -> LoadImgBullet(screen);
+        bool ret = false;
+        if (typeMove == STATIC_THREAT) {
+            pBullet -> SetBulletType(BulletObject::LASER_BULLET);
+            ret = pBullet -> LoadImgBullet(screen);
+        } else if (typeMove == MOVE_IN_SPACE_THREAT) {
+            pBullet -> SetBulletType(BulletObject::SPHERE_BULLET);
+            ret = pBullet -> LoadImgBullet(screen);
+        }
         
         if (ret) {
             pBullet -> SetIsMove(true);
@@ -273,6 +279,13 @@ void ThreatObject::MakeBullet(SDL_Renderer* screen, const int& xLimit, const int
             } else {
                 pBullet -> SetIsMove(true);
                 pBullet -> SetRect(rect.x + 5, rect.y + 10);
+                if (inputType.left == 1) {
+                    pBullet -> SetBulletDir(BulletObject::DIR_LEFT);
+                    pBullet -> SetRect(rect.x + 5, rect.y + 10);
+                }else if (inputType.right == 1) {
+                    pBullet -> SetBulletDir(BulletObject::DIR_RIGHT);
+                    pBullet -> SetRect(rect.x + 20, rect.y + 10);
+                }
             }
         }
     }
