@@ -16,13 +16,12 @@ Trò chơi được lấy cảm hứng bởi thể loại bắn súng, phiêu l�
 2. Xây dựng map gồm nhiều thành phần địa hình, vật trang trí
 3. Cuốn chiếu map theo nhân vật di chuyển và xây dựng tương tác giữa nhân vật và map
 4. Tạo ra hiệu ứng cho nhân vật di chuyển trái, phải, nhảy lên bằng ảnh nhiều frame
-5. Nhân vật có thể đổi loại đạn
+5. Nhân vật có thể đổi loại đạn (3 loại đạn)
 6. Tạo ra 2 loại quái vật: đứng im và chuyển động
-7. Tạo ra boss cuối cùng
-8. Tạo ra 2 loại đạn cho nhân vật
-9. Xây dựng va chạm giữa nhân vật và quái, đạn với nhân vật, đạn với quái
-10. Sử dụng font để hiển thị tiền, điểm đạt được, thời gian, ...
-11. Tạo hiệu ứng âm thanh cho trò chơi: âm nền, âm thanh đạn bắn, âm thanh nhảy, âm thanh ăn tiền, âm thanh của boss, ...
+7. Tạo ra boss cuối cùng, khi tiêu diệt thì hiện lên cửa sổ chiến thắng
+8. Xây dựng va chạm giữa nhân vật và quái, đạn với nhân vật, đạn với quái
+9. Sử dụng font để hiển thị tiền, điểm đạt được, thời gian, ...
+10. Tạo hiệu ứng âm thanh cho trò chơi: âm nền, âm thanh đạn bắn, âm thanh nhảy, âm thanh ăn tiền, âm thanh của boss, ...
 -> Video minh họa: https://youtu.be/XDTeBPQfkfM 
 
 ## Các kỹ thuật lập trình được sử dụng
