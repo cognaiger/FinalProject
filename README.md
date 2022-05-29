@@ -5,11 +5,12 @@ Lưu ý: Cách cài đặt này được thực hiện trên vscode, máy 64bit
 1. Clone repository này xuống máy tính 
 2. Download thư viện, các file cần thiết khác ở đây https://drive.google.com/drive/folders/1ogK7Zw4ZuO2cRvWGX7L-hNIJXjqY2izQ?usp=sharing
 3. Trong file Makefile các bạn chú ý tùy chỉnh đường dẫn đến 'SDL2-2.0.20\x86_64-w64-mingw32\include' và 'SDL2-2.0.20\x86_64-w64-mingw32\lib' tùy theo đường dẫn ở máy bạn
-4. Sau khi xong hết, để chạy chương trình các bạn gõ vào terminal trong vscode 'mingw32-make'
-5. Chạy file main.exe
+4. Đặt environment path của máy bạn đến mingw64/bin
+5. Sau khi xong hết, để chạy chương trình các bạn gõ vào terminal trong vscode 'mingw32-make'
+6. Chạy file main.exe
 
 ## Mô tả về trò chơi
-Trò chơi được lấy cảm hứng bởi thể loại bắn súng, phiêu lưu. Ý tưởng chính là bạn được đặt vào một cốt truyện, trong cốt truyện đó bạn phải vượt qua quái vật, các mối hiểm họa để có thể tìm được phần thưởng ở cuối bản đồ.
+Trò chơi được lấy cảm hứng bởi thể loại bắn súng, phiêu lưu. Ý tưởng chính là bạn được đặt vào một cốt truyện, trong cốt truyện đó bạn phải tiêu diệt quái vật, các mối hiểm họa để có thể tìm được phần thưởng ở cuối bản đồ. Khi hoàn thành bản đồ này thì sẽ được chuyển đến bản đồ khác.
 
 ## Các chức năng đã cài đặt
 1. Menu đơn giản cho trò chơi
@@ -34,8 +35,9 @@ Trò chơi được lấy cảm hứng bởi thể loại bắn súng, phiêu l�
 7. Màn hình console (window.h)
 
 ## Kết luận
-Đây là dòng game luôn luôn có thể phát triển theo hướng tuyến tính. Một vài hướng phát triển tiếp theo: xây dựng thêm map, thêm cốt truyện cho nhân vật, ...
+Đây là dòng game luôn luôn có thể phát triển theo hướng tuyến tính. Một vài hướng phát triển tiếp theo: xây dựng thêm map để tăng trải nghiệm, thêm cốt truyện cho nhân vật, bổ sung các nhân vật khác vào, cho chơi chế độ 2 người, ...
 ### Những điều tâm đắc của em sau khi hoàn thành chương trình
 -> Trải nghiệm quy trình phát triển sản phẩm thu nhỏ
 -> Giúp em thực hành các kĩ thuật phát triển chương trình được dạy trên lớp: chia module, refractor, quy trình CDIO
 -> Giúp em rèn thêm tính kiên nhẫn khi có bug
+-> Em sẽ thông cảm cho nhà phát hành hơn khi gặp lỗi trong trò chơi điện tử
